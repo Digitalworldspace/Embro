@@ -11,7 +11,7 @@
 <meta property="og:title" content="Machine Production Compare">
 <meta property="og:description" content="Enter two stitch values once and compare estimated meter-per-day production for every machine.">
 <meta property="og:type" content="website">
-<title>Machine Production Compare – Automatic Meter/Day</title>
+<title>Embro · Machine Production Calculator</title>
 <script src="https://telegram.org/js/telegram-web-app.js?65"></script>
 <style>
 :root{--bg:#07111f;--panel:#101d30;--panel2:#14243a;--line:rgba(255,255,255,.11);--text:#f4f7fb;--muted:#a6b4c7;--cyan:#65d7e8;--green:#56d6a0;--gold:#f3c86b;--shadow:0 22px 60px rgba(0,0,0,.28)}
@@ -92,47 +92,157 @@ body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),t
 @media(max-width:480px){.wrap{padding:8px 11px 28px}.top{margin:0 -11px 12px;padding:9px 11px 11px}.brand{gap:9px}.brand h1{font-size:14px}.eyebrow{font-size:8px}.logo{width:39px;height:39px;flex-basis:39px}.lang-select{min-width:104px;max-width:118px;min-height:38px!important;font-size:11px!important}.hero-main{padding:19px 17px 20px}.hero h2{font-size:25px}.hero-side{padding:13px 14px}.stat-number{font-size:20px}.card{padding:15px}.input{min-height:53px}.result{padding:12px;gap:8px}.production strong{font-size:19px}.app-bottom-nav{width:calc(100% - 18px);bottom:calc(7px + env(safe-area-inset-bottom,0px));padding:6px;border-radius:19px}.app-tab{min-height:51px;border-radius:13px}.app-tab svg{width:18px;height:18px}.app-tab span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 
+
+/* Real app screens: each bottom tab opens its own screen instead of scrolling. */
+.app-screens{max-width:760px;margin:0 auto;min-height:56vh}
+.app-screen{display:none;animation:screenIn .2s ease both}
+.app-screen.active{display:block}
+@keyframes screenIn{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.page-heading{margin:9px 3px 14px}
+.page-heading h2{font-size:25px;letter-spacing:-.6px;margin:6px 0}
+.page-heading p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
+.grid.single-panel{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0}
+.home-action{min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:13px;border-radius:17px;border:1px solid rgba(255,255,255,.12);cursor:pointer;color:var(--text);font:inherit;background:linear-gradient(130deg,#142b43,#102137);min-height:74px}
+.home-action.primary-action{border-color:rgba(111,225,208,.3);background:linear-gradient(130deg,#173c43,#173047)}
+.home-action-icon{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,#74e5d0,#8dcaff);color:#071b24;font-size:19px;font-weight:900}
+.home-action strong,.home-action small{display:block}
+.home-action strong{font-size:11px;line-height:1.35}
+.home-action small{font-size:9px;color:#9fb2c8;margin-top:3px}
+.action-arrow{margin-left:auto;font-size:22px;color:#8db7c5}
+.home-summary{margin-top:13px}
+.home-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.home-summary-item{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:12px}
+.home-summary-item span{display:block;font-size:10px;color:var(--muted);margin-bottom:5px}
+.home-summary-item strong{font-size:17px;overflow-wrap:anywhere}
+.home-best-line{display:flex;align-items:flex-start;gap:9px;margin-top:11px;border:1px solid rgba(86,214,160,.22);background:rgba(86,214,160,.06);border-radius:12px;padding:11px;font-size:10px;line-height:1.5;color:#c7e3da}
+.sample-note{color:#a7bdd0;font-size:10px;line-height:1.5;margin:0 0 12px;padding:9px 11px;border-left:2px solid var(--gold);background:rgba(243,200,107,.06);border-radius:0 9px 9px 0}
+.full-action{width:100%;margin-top:5px}
+.machine-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.language-card{margin-top:8px}
+.language-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:13px}
+.language-option{min-width:0;display:flex;align-items:center;justify-content:space-between;gap:7px;text-align:left;min-height:54px;padding:10px 11px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);font:inherit;cursor:pointer}
+.language-option.active{border-color:rgba(111,225,208,.65);background:linear-gradient(120deg,rgba(111,225,208,.16),rgba(113,167,255,.11));box-shadow:inset 0 0 0 1px rgba(111,225,208,.12)}
+.language-option .language-native{font-size:12px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.language-option .language-code{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.language-option .language-check{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:var(--green);color:#09241b;font-size:11px;font-weight:900;flex:0 0 18px}
+.header-language-btn{display:flex;align-items:center;gap:7px;min-height:39px;padding:7px 10px;border:1px solid rgba(255,255,255,.13);border-radius:13px;background:#12233a;color:#eaf4fb;font:inherit;font-size:11px;font-weight:750;cursor:pointer}
+.header-language-btn svg{width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.header-language-btn:active,.home-action:active,.language-option:active{transform:scale(.985)}
+.app-footer{margin:16px auto 0;max-width:760px}
+.catalogue-foot{margin-top:12px}
+[dir="rtl"] .home-action{text-align:right;flex-direction:row-reverse}
+[dir="rtl"] .action-arrow{margin-left:0;margin-right:auto}
+[dir="rtl"] .language-option{text-align:right}
+@media(min-width:850px){.app-screens{max-width:760px}.wrap{max-width:800px}.top{margin-left:-16px;margin-right:-16px}.page-heading h2{font-size:28px}}
+@media(max-width:480px){.home-actions{grid-template-columns:1fr;gap:8px}.home-action{min-height:66px}.page-heading{margin-top:7px}.page-heading h2{font-size:23px}.language-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.language-option{min-height:50px;padding:9px}.language-option .language-native{font-size:11px}.machine-actions{grid-template-columns:1fr 1fr}.header-language-btn{min-height:36px;padding:6px 8px;font-size:10px}.top-right{gap:6px}}
+
 </style>
+<link rel="icon" href="data:,">
 </head>
 <body>
 <div class="wrap">
 <header class="top" id="appTop">
   <div class="brand"><div class="logo">M</div><div><div class="eyebrow" data-t="brandEyebrow">PRODUCTION INTELLIGENCE</div><h1 data-t="appName">Machine Production Compare</h1></div></div>
-  <div class="top-right"><div class="lang-wrap"><span data-t="languageLabel">Language</span><select class="lang-select" id="languageSelect" aria-label="Language"></select></div><div class="top-pill" data-t="livePill">● Live calculator · Mobile ready</div></div>
+  <div class="top-right">
+    <button type="button" class="header-language-btn" id="headerLanguageButton" aria-label="Open language settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+      <span id="currentLanguageName">ગુજરાતી</span>
+    </button>
+    <div class="top-pill" data-t="livePill">● Live calculator · Mobile ready</div>
+  </div>
 </header>
-<section class="hero">
-  <div class="hero-main"><div class="eyebrow" data-t="heroKicker">SMART MACHINE SELECTOR</div><h2 data-t="heroTitle">See how many meters each machine can produce.</h2><p data-t="heroDesc">Enter Daily Stitch Production and Stitches per Frame once. Every machine will show its estimated fabric production in meters per day, so you can compare them and find the best machine.</p></div>
-  <div class="hero-side"><div><div class="stat-label" data-t="bestRecorded">Best recorded production</div><div class="stat-number" id="heroBest">—</div><div class="stat-foot" id="heroBestName">—</div></div><div><div class="stat-label" data-t="machinesLibrary">Machines in library</div><div class="stat-number" id="machineCount">10</div><div class="stat-foot" data-t="presetConfigs">Preset configurations</div></div></div>
-</section>
-<main class="grid">
-<section class="card input-panel" id="inputPanel">
-  <div class="card-head"><div><h3 data-t="inputTitle">Production Input</h3></div><span class="tag" data-t="inputTag">INPUT</span></div>
-  <div class="shared-note"><span class="shared-dot"></span><span data-t="sharedInputNote">Enter these two values once. Results for every machine update automatically.</span></div>
-  <div class="field"><label for="dailyStitch"><span data-t="dailyStitch">Daily Stitch Production</span><span data-t="byKarigar">By operator · stitches/day</span></label><input class="input" id="dailyStitch" type="number" min="1" step="1" placeholder="Example: 400000" inputmode="numeric"></div>
-  <div class="field"><label for="perFrame"><span data-t="perFrame">Stitches per Frame</span><span data-t="stitchesFrame">Stitches/frame</span></label><input class="input" id="perFrame" type="number" min="1" step="1" placeholder="Example: 50000" inputmode="numeric"></div>
-  <div class="btn-row"><button class="btn btn-ghost" id="addBtn" data-t="addCustom">＋ Add Custom Machine</button><button class="btn btn-ghost" id="resetBtn" data-t="resetData">Reset Data</button></div>
-</section>
-<section class="card machine-panel" id="machinePanel">
-  <div class="section-title"><div><h3 data-t="allProduction">Meter Production by Machine</h3><div class="sub" data-t="highestHint">Each result below uses the two stitch values you entered on the left.</div></div><span class="count" id="resultCount">0 calculated</span></div>
-  <div class="results" id="results"></div>
-  <div class="recommend" id="recommend"></div>
-  <div class="foot" data-t="productionNote">Actual production can vary with fabric, design, operator, machine downtime and machine condition. This calculator uses the stitch data you enter.</div>
-</section>
+
+<main class="app-screens">
+  <!-- HOME SCREEN -->
+  <section class="app-screen active" id="screen-home" aria-labelledby="homeScreenTitle">
+    <section class="hero">
+      <div class="hero-main">
+        <div class="eyebrow" data-t="heroKicker">SMART MACHINE SELECTOR</div>
+        <h2 id="homeScreenTitle" data-t="heroTitle">See how many meters each machine can produce.</h2>
+        <p data-t="heroDesc">Enter Daily Stitch Production and Stitches per Frame once. Every machine will show its estimated fabric production in meters per day, so you can compare them and find the best machine.</p>
+      </div>
+      <div class="hero-side">
+        <div><div class="stat-label" data-t="bestRecorded">Best recorded production</div><div class="stat-number" id="heroBest">—</div><div class="stat-foot" id="heroBestName">—</div></div>
+        <div><div class="stat-label" data-t="machinesLibrary">Machines in library</div><div class="stat-number" id="machineCount">10</div><div class="stat-foot" data-t="presetConfigs">Preset configurations</div></div>
+      </div>
+    </section>
+    <div class="home-actions">
+      <button type="button" class="home-action primary-action" data-go-screen="input">
+        <span class="home-action-icon">✎</span><span><strong data-t="goInput">Enter production</strong><small data-t="homeInputHint">Add your two stitch values</small></span><span class="action-arrow">›</span>
+      </button>
+      <button type="button" class="home-action secondary-action" data-go-screen="machines">
+        <span class="home-action-icon">▦</span><span><strong data-t="goMachines">Compare machines</strong><small data-t="homeMachinesHint">See meters per day</small></span><span class="action-arrow">›</span>
+      </button>
+    </div>
+    <section class="home-summary card">
+      <div class="section-title"><div><h3 data-t="homeSummaryTitle">Your production summary</h3><div class="sub" data-t="homeSummaryDesc">All machines use the same two input values.</div></div></div>
+      <div class="home-summary-grid">
+        <div class="home-summary-item"><span data-t="dailyStitch">Daily Stitch Production</span><strong id="homeDailyValue">400,000</strong></div>
+        <div class="home-summary-item"><span data-t="perFrame">Stitches per Frame</span><strong id="homeFrameValue">50,000</strong></div>
+      </div>
+      <div class="home-best-line"><span class="shared-dot"></span><span id="homeBestSummary">Your best machine will appear here.</span></div>
+    </section>
+  </section>
+
+  <!-- INPUT SCREEN -->
+  <section class="app-screen" id="screen-input" aria-labelledby="inputScreenHeading">
+    <div class="page-heading"><div class="eyebrow" data-t="inputTag">INPUT</div><h2 id="inputScreenHeading" data-t="inputScreenTitle">Production inputs</h2><p data-t="inputScreenDesc">Enter these two values once. Every machine will be calculated automatically.</p></div>
+    <main class="grid single-panel">
+      <section class="card input-panel" id="inputPanel">
+        <div class="card-head"><div><h3 data-t="inputTitle">Production Input</h3></div><span class="tag" data-t="inputTag">INPUT</span></div>
+        <div class="shared-note"><span class="shared-dot"></span><span data-t="sharedInputNote">Enter these two values once. Results for every machine update automatically.</span></div>
+        <div class="sample-note" data-t="sampleValuesNote">Sample values are prefilled. Replace them with your actual production figures.</div>
+        <div class="field"><label for="dailyStitch"><span data-t="dailyStitch">Daily Stitch Production</span><span data-t="byKarigar">By operator · stitches/day</span></label><input class="input" id="dailyStitch" type="number" min="1" step="1" placeholder="Example: 400000" inputmode="numeric"></div>
+        <div class="field"><label for="perFrame"><span data-t="perFrame">Stitches per Frame</span><span data-t="stitchesFrame">Stitches/frame</span></label><input class="input" id="perFrame" type="number" min="1" step="1" placeholder="Example: 50000" inputmode="numeric"></div>
+        <button type="button" class="btn btn-primary full-action" id="goToMachinesButton"><span data-t="viewResults">View machine results</span> ↗</button>
+      </section>
+    </main>
+  </section>
+
+  <!-- MACHINES SCREEN -->
+  <section class="app-screen" id="screen-machines" aria-labelledby="machinesScreenHeading">
+    <div class="page-heading"><div class="eyebrow" data-t="navMachines">MACHINES</div><h2 id="machinesScreenHeading" data-t="machinesScreenTitle">Machine comparison</h2><p data-t="machinesScreenDesc">Every machine is ranked by its estimated fabric production in meters per day.</p></div>
+    <main class="grid single-panel">
+      <section class="card machine-panel" id="machinePanel">
+        <div class="section-title"><div><h3 data-t="allProduction">Meter Production by Machine</h3><div class="sub" data-t="highestHint">Each result below uses the two stitch values you entered.</div></div><span class="count" id="resultCount">10 total</span></div>
+        <div class="results" id="results"></div>
+        <div class="recommend" id="recommend"></div>
+        <div class="machine-actions">
+          <button class="btn btn-ghost" id="addBtn" type="button" data-t="addCustom">＋ Add Custom Machine</button>
+          <button class="btn btn-ghost" id="resetBtn" type="button" data-t="resetData">Reset Data</button>
+        </div>
+        <div class="foot" data-t="productionNote">Actual production can vary with fabric, design, operator, machine downtime and machine condition.</div>
+      </section>
+    </main>
+    <div class="foot catalogue-foot" data-t="catalogueNote">Machine configurations are indicative presets, not a complete manufacturer catalogue.</div>
+  </section>
+
+  <!-- LANGUAGE SCREEN -->
+  <section class="app-screen" id="screen-language" aria-labelledby="languageScreenHeading">
+    <div class="page-heading"><div class="eyebrow" data-t="navLanguage">LANGUAGE</div><h2 id="languageScreenHeading" data-t="languageScreenTitle">Choose your language</h2><p data-t="languageScreenDesc">Tap a language to translate the whole calculator.</p></div>
+    <section class="card language-card">
+      <div class="card-head"><div><h3 data-t="chooseLanguage">Available languages</h3><div class="sub" data-t="languageSelectHint">Your selection is saved on this device.</div></div><span class="tag" id="selectedLanguageBadge">GU</span></div>
+      <div class="field"><label for="languageSearch" data-t="searchLanguages">Search languages</label><input class="input" id="languageSearch" type="search" data-t-placeholder="languageSearchPlaceholder" placeholder="Search languages"></div>
+      <div class="field"><label for="languageSelect" data-t="languageLabel">Language</label><select class="input" id="languageSelect" aria-label="Language"></select></div>
+      <div class="language-grid" id="languageGrid" aria-label="Available languages"></div>
+    </section>
+  </section>
 </main>
-<div class="foot" data-t="catalogueNote">Machine configurations are indicative presets, not a complete manufacturer catalogue. Confirm the exact head count and working area with the machine supplier before purchase.</div>
+<div class="foot app-footer" data-t="appFooter">Machine production estimates are based on the values you enter.</div>
 </div>
 
 <nav class="app-bottom-nav" aria-label="App navigation">
-  <button type="button" class="app-tab active" data-target="appTop" data-tab="home" aria-label="Home">
+  <button type="button" class="app-tab active" data-tab="home" aria-label="Home" aria-current="page">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9M9 20v-7h6v7"/></svg><span data-t="navHome">Home</span>
   </button>
-  <button type="button" class="app-tab" data-target="inputPanel" data-tab="input" aria-label="Input">
+  <button type="button" class="app-tab" data-tab="input" aria-label="Input">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/><rect x="3" y="3" width="18" height="18" rx="5"/></svg><span data-t="navInput">Input</span>
   </button>
-  <button type="button" class="app-tab" data-target="machinePanel" data-tab="machines" aria-label="Machines">
+  <button type="button" class="app-tab" data-tab="machines" aria-label="Machines">
     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span data-t="navMachines">Machines</span>
   </button>
-  <button type="button" class="app-tab" data-target="languageSelect" data-tab="language" aria-label="Language">
+  <button type="button" class="app-tab" data-tab="language" aria-label="Language">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span data-t="navLanguage">Language</span>
   </button>
 </nav>
@@ -203,6 +313,39 @@ body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),t
 
   const appNavLabels = {"en":["Home","Input","Machines","Language"],"gu":["હોમ","ઇનપુટ","મશીનો","ભાષા"],"hi":["होम","इनपुट","मशीनें","भाषा"],"mr":["मुख्य","इनपुट","मशीन","भाषा"],"bn":["হোম","ইনপুট","মেশিন","ভাষা"],"ta":["முகப்பு","உள்ளீடு","இயந்திரங்கள்","மொழி"],"te":["హోమ్","ఇన్‌పుట్","యంత్రాలు","భాష"],"kn":["ಮನೆ","ಇನ್‌ಪುಟ್","ಯಂತ್ರಗಳು","ಭಾಷೆ"],"ml":["ഹോം","ഇൻപുട്ട്","മെഷീനുകൾ","ഭാഷ"],"pa":["ਮੁੱਖ","ਇਨਪੁੱਟ","ਮਸ਼ੀਨਾਂ","ਭਾਸ਼ਾ"],"ur":["ہوم","ان پٹ","مشینیں","زبان"],"ar":["الرئيسية","إدخال","الآلات","اللغة"],"es":["Inicio","Datos","Máquinas","Idioma"],"fr":["Accueil","Saisie","Machines","Langue"],"de":["Start","Eingabe","Maschinen","Sprache"],"pt":["Início","Dados","Máquinas","Idioma"],"ru":["Главная","Ввод","Машины","Язык"],"zh":["首页","输入","机器","语言"],"ja":["ホーム","入力","機械","言語"],"ko":["홈","입력","기계","언어"],"id":["Beranda","Input","Mesin","Bahasa"],"it":["Home","Dati","Macchine","Lingua"],"tr":["Ana Sayfa","Giriş","Makineler","Dil"],"vi":["Trang chủ","Nhập","Máy","Ngôn ngữ"],"th":["หน้าแรก","ข้อมูล","เครื่องจักร","ภาษา"]};
   Object.entries(appNavLabels).forEach(([code,labels])=>{if(translations[code])Object.assign(translations[code],{navHome:labels[0],navInput:labels[1],navMachines:labels[2],navLanguage:labels[3]});});
+
+  const appPageTranslations = {"en":{"homeScreenTitle":"Production dashboard","homeScreenDesc":"Enter your two production values once, then compare every machine.","goInput":"Enter production","homeInputHint":"Add your two stitch values","goMachines":"Compare machines","homeMachinesHint":"See estimated meters per day","inputScreenTitle":"Production inputs","inputScreenDesc":"Use the same two values for every machine. Results update instantly.","viewResults":"View machine results","machinesScreenTitle":"Machine comparison","machinesScreenDesc":"Every machine is ranked by estimated fabric meters per day.","languageScreenTitle":"Choose your language","languageScreenDesc":"Tap a language to translate the whole calculator.","languageSearchPlaceholder":"Search languages","chooseLanguage":"Available languages","languageSelectHint":"Your selection is saved on this device.","sampleValuesNote":"Sample values are prefilled (400,000 and 50,000). Replace them with your actual figures.","homeSummaryTitle":"Your production summary","homeSummaryDesc":"All machines use the same two input values."},"gu":{"homeScreenTitle":"પ્રોડક્શન ડેશબોર્ડ","homeScreenDesc":"તમારા પ્રોડક્શનના બે આંકડા એક વાર નાખો અને બધા મશીનની સરખામણી કરો.","goInput":"પ્રોડક્શન દાખલ કરો","homeInputHint":"તમારા બે સ્ટિચના આંકડા નાખો","goMachines":"મશીનની સરખામણી કરો","homeMachinesHint":"દરરોજ કેટલા મીટર બનશે તે જુઓ","inputScreenTitle":"પ્રોડક્શનના આંકડા","inputScreenDesc":"બધા મશીન માટે આ જ બે આંકડા વપરાશે. પરિણામ તરત બદલાશે.","viewResults":"મશીનનાં પરિણામ જુઓ","machinesScreenTitle":"મશીનની સરખામણી","machinesScreenDesc":"દરેક મશીનનું અંદાજિત મીટર/દિવસ ઉત્પાદન અહીં સરખાવ્યું છે.","languageScreenTitle":"તમારી ભાષા પસંદ કરો","languageScreenDesc":"કેલ્ક્યુલેટરની ભાષા બદલવા માટે ભાષા પસંદ કરો.","languageSearchPlaceholder":"ભાષા શોધો","chooseLanguage":"ઉપલબ્ધ ભાષાઓ","languageSelectHint":"તમારી પસંદગી આ ડિવાઇસમાં સેવ થશે.","sampleValuesNote":"ઉદાહરણ તરીકે 400,000 અને 50,000 પહેલેથી ભર્યા છે. તમારા સાચા આંકડા નાખો.","homeSummaryTitle":"તમારા પ્રોડક્શનનો સારાંશ","homeSummaryDesc":"બધા મશીન માટે આ જ બે આંકડા વપરાય છે."},"hi":{"homeScreenTitle":"उत्पादन डैशबोर्ड","homeScreenDesc":"उत्पादन के दो मान एक बार भरें और सभी मशीनों की तुलना करें।","goInput":"उत्पादन दर्ज करें","homeInputHint":"अपने दो स्टिच मान दर्ज करें","goMachines":"मशीनों की तुलना करें","homeMachinesHint":"प्रतिदिन मीटर में उत्पादन देखें","inputScreenTitle":"उत्पादन इनपुट","inputScreenDesc":"सभी मशीनों के लिए यही दो मान उपयोग होंगे। परिणाम तुरंत बदलेंगे।","viewResults":"मशीन परिणाम देखें","machinesScreenTitle":"मशीन तुलना","machinesScreenDesc":"हर मशीन का अनुमानित मीटर/दिन उत्पादन यहाँ तुलना किया गया है।","languageScreenTitle":"अपनी भाषा चुनें","languageScreenDesc":"कैलकुलेटर की भाषा बदलने के लिए भाषा चुनें।","languageSearchPlaceholder":"भाषाएँ खोजें","chooseLanguage":"उपलब्ध भाषाएँ","languageSelectHint":"आपकी पसंद इस डिवाइस पर सेव होगी।","sampleValuesNote":"उदाहरण के लिए 400,000 और 50,000 पहले से भरे हैं। इन्हें अपने वास्तविक मानों से बदलें।","homeSummaryTitle":"आपका उत्पादन सारांश","homeSummaryDesc":"सभी मशीनों के लिए यही दो इनपुट मान उपयोग होते हैं।"},"mr":{"homeScreenTitle":"उत्पादन डॅशबोर्ड","homeScreenDesc":"उत्पादनाचे दोन आकडे एकदाच भरा आणि सर्व मशीनची तुलना करा.","goInput":"उत्पादन भरा","homeInputHint":"तुमचे दोन स्टिच आकडे भरा","goMachines":"मशीनची तुलना करा","homeMachinesHint":"दररोज किती मीटर तयार होतील ते पहा","inputScreenTitle":"उत्पादन इनपुट","inputScreenDesc":"सर्व मशीनसाठी हेच दोन आकडे वापरले जातील. निकाल लगेच बदलतील.","viewResults":"मशीनचे निकाल पहा","machinesScreenTitle":"मशीन तुलना","machinesScreenDesc":"प्रत्येक मशीनचे अंदाजे मीटर/दिवस उत्पादन येथे तुलना केले आहे.","languageScreenTitle":"तुमची भाषा निवडा","languageScreenDesc":"कॅल्क्युलेटरची भाषा बदलण्यासाठी भाषा निवडा.","languageSearchPlaceholder":"भाषा शोधा","chooseLanguage":"उपलब्ध भाषा","languageSelectHint":"तुमची निवड या डिव्हाइसवर सेव्ह होईल.","sampleValuesNote":"उदाहरणार्थ 400,000 आणि 50,000 आधी भरले आहेत. तुमचे खरे आकडे भरा.","homeSummaryTitle":"तुमचा उत्पादन सारांश","homeSummaryDesc":"सर्व मशीनसाठी हेच दोन इनपुट आकडे वापरले जातात."},"bn":{"homeScreenTitle":"উৎপাদন ড্যাশবোর্ড","homeScreenDesc":"উৎপাদনের দুটি মান একবার দিন, তারপর সব মেশিন তুলনা করুন।","goInput":"উৎপাদন লিখুন","homeInputHint":"আপনার দুটি স্টিচ মান লিখুন","goMachines":"মেশিন তুলনা করুন","homeMachinesHint":"প্রতিদিন কত মিটার হবে দেখুন","inputScreenTitle":"উৎপাদন ইনপুট","inputScreenDesc":"সব মেশিনে এই একই দুটি মান ব্যবহার হবে। ফল সঙ্গে সঙ্গে বদলাবে।","viewResults":"মেশিনের ফল দেখুন","machinesScreenTitle":"মেশিন তুলনা","machinesScreenDesc":"প্রতিটি মেশিনের আনুমানিক মিটার/দিন উৎপাদন এখানে তুলনা করা হয়েছে।","languageScreenTitle":"আপনার ভাষা বেছে নিন","languageScreenDesc":"ক্যালকুলেটরের ভাষা বদলাতে একটি ভাষা বেছে নিন।","languageSearchPlaceholder":"ভাষা খুঁজুন","chooseLanguage":"উপলভ্য ভাষা","languageSelectHint":"আপনার পছন্দ এই ডিভাইসে সংরক্ষিত হবে।","sampleValuesNote":"উদাহরণ হিসেবে 400,000 ও 50,000 আগে থেকে দেওয়া আছে। নিজের মান দিন।","homeSummaryTitle":"আপনার উৎপাদনের সারাংশ","homeSummaryDesc":"সব মেশিনে একই দুটি ইনপুট ব্যবহার হয়।"},"ta":{"homeScreenTitle":"உற்பத்தி டாஷ்போர்டு","homeScreenDesc":"உங்கள் இரண்டு உற்பத்தி மதிப்புகளையும் ஒருமுறை உள்ளிட்டு எல்லா இயந்திரங்களையும் ஒப்பிடுங்கள்.","goInput":"உற்பத்தியை உள்ளிடுங்கள்","homeInputHint":"உங்கள் இரண்டு ஸ்டிச் மதிப்புகளை உள்ளிடுங்கள்","goMachines":"இயந்திரங்களை ஒப்பிடுங்கள்","homeMachinesHint":"ஒரு நாளில் எத்தனை மீட்டர் என்பதைப் பாருங்கள்","inputScreenTitle":"உற்பத்தி உள்ளீடு","inputScreenDesc":"எல்லா இயந்திரங்களுக்கும் இதே இரண்டு மதிப்புகள் பயன்படுத்தப்படும். முடிவுகள் உடனே மாறும்.","viewResults":"இயந்திர முடிவுகளைப் பாருங்கள்","machinesScreenTitle":"இயந்திர ஒப்பீடு","machinesScreenDesc":"ஒவ்வொரு இயந்திரத்தின் மதிப்பிடப்பட்ட மீட்டர்/நாள் உற்பத்தி இங்கே ஒப்பிடப்படுகிறது.","languageScreenTitle":"மொழியைத் தேர்ந்தெடுக்கவும்","languageScreenDesc":"கால்குலேட்டரின் மொழியை மாற்ற ஒரு மொழியைத் தேர்ந்தெடுக்கவும்.","languageSearchPlaceholder":"மொழிகளைத் தேடுங்கள்","chooseLanguage":"கிடைக்கும் மொழிகள்","languageSelectHint":"உங்கள் தேர்வு இந்தச் சாதனத்தில் சேமிக்கப்படும்.","sampleValuesNote":"400,000 மற்றும் 50,000 எடுத்துக்காட்டு மதிப்புகளாக முன்பே உள்ளன. உங்கள் உண்மையான மதிப்புகளை மாற்றுங்கள்.","homeSummaryTitle":"உங்கள் உற்பத்திச் சுருக்கம்","homeSummaryDesc":"எல்லா இயந்திரங்களுக்கும் இதே இரண்டு உள்ளீடுகளே பயன்படுத்தப்படும்."},"te":{"homeScreenTitle":"ఉత్పత్తి డ్యాష్‌బోర్డ్","homeScreenDesc":"మీ రెండు ఉత్పత్తి విలువలను ఒక్కసారి నమోదు చేసి అన్ని మెషిన్‌లను పోల్చండి.","goInput":"ఉత్పత్తిని నమోదు చేయండి","homeInputHint":"మీ రెండు స్టిచ్ విలువలను నమోదు చేయండి","goMachines":"మెషిన్‌లను పోల్చండి","homeMachinesHint":"రోజుకు ఎన్ని మీటర్లు వస్తాయో చూడండి","inputScreenTitle":"ఉత్పత్తి ఇన్‌పుట్","inputScreenDesc":"అన్ని మెషిన్‌లకు ఈ రెండు విలువలే ఉపయోగిస్తాం. ఫలితాలు వెంటనే మారతాయి.","viewResults":"మెషిన్ ఫలితాలు చూడండి","machinesScreenTitle":"మెషిన్ పోలిక","machinesScreenDesc":"ప్రతి మెషిన్ అంచనా మీటర్/రోజు ఉత్పత్తిని ఇక్కడ పోల్చాం.","languageScreenTitle":"మీ భాషను ఎంచుకోండి","languageScreenDesc":"క్యాల్క్యులేటర్ భాష మార్చడానికి భాషను ఎంచుకోండి.","languageSearchPlaceholder":"భాషలను వెతకండి","chooseLanguage":"అందుబాటులో ఉన్న భాషలు","languageSelectHint":"మీ ఎంపిక ఈ పరికరంలో సేవ్ అవుతుంది.","sampleValuesNote":"400,000 మరియు 50,000 ఉదాహరణ విలువలుగా ముందే ఉన్నాయి. మీ నిజమైన విలువలను నమోదు చేయండి.","homeSummaryTitle":"మీ ఉత్పత్తి సారాంశం","homeSummaryDesc":"అన్ని మెషిన్‌లకు ఇదే రెండు ఇన్‌పుట్ విలువలు ఉపయోగిస్తాం."},"kn":{"homeScreenTitle":"ಉತ್ಪಾದನಾ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್","homeScreenDesc":"ನಿಮ್ಮ ಎರಡು ಉತ್ಪಾದನಾ ಮೌಲ್ಯಗಳನ್ನು ಒಮ್ಮೆ ನಮೂದಿಸಿ, ಎಲ್ಲಾ ಯಂತ್ರಗಳನ್ನು ಹೋಲಿಸಿ.","goInput":"ಉತ್ಪಾದನೆ ನಮೂದಿಸಿ","homeInputHint":"ನಿಮ್ಮ ಎರಡು ಸ್ಟಿಚ್ ಮೌಲ್ಯಗಳನ್ನು ನಮೂದಿಸಿ","goMachines":"ಯಂತ್ರಗಳನ್ನು ಹೋಲಿಸಿ","homeMachinesHint":"ದಿನಕ್ಕೆ ಎಷ್ಟು ಮೀಟರ್ ಉತ್ಪಾದನೆ ಎಂದು ನೋಡಿ","inputScreenTitle":"ಉತ್ಪಾದನಾ ಇನ್‌ಪುಟ್","inputScreenDesc":"ಎಲ್ಲಾ ಯಂತ್ರಗಳಿಗೆ ಇದೇ ಎರಡು ಮೌಲ್ಯಗಳನ್ನು ಬಳಸಲಾಗುತ್ತದೆ. ಫಲಿತಾಂಶಗಳು ತಕ್ಷಣ ಬದಲಾಗುತ್ತವೆ.","viewResults":"ಯಂತ್ರಗಳ ಫಲಿತಾಂಶ ನೋಡಿ","machinesScreenTitle":"ಯಂತ್ರ ಹೋಲಿಕೆ","machinesScreenDesc":"ಪ್ರತಿ ಯಂತ್ರದ ಅಂದಾಜು ಮೀಟರ್/ದಿನ ಉತ್ಪಾದನೆಯನ್ನು ಇಲ್ಲಿ ಹೋಲಿಸಲಾಗಿದೆ.","languageScreenTitle":"ನಿಮ್ಮ ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ","languageScreenDesc":"ಕ್ಯಾಲ್ಕುಲೇಟರ್ ಭಾಷೆ ಬದಲಿಸಲು ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ.","languageSearchPlaceholder":"ಭಾಷೆಗಳನ್ನು ಹುಡುಕಿ","chooseLanguage":"ಲಭ್ಯವಿರುವ ಭಾಷೆಗಳು","languageSelectHint":"ನಿಮ್ಮ ಆಯ್ಕೆ ಈ ಸಾಧನದಲ್ಲಿ ಉಳಿಸಲಾಗುತ್ತದೆ.","sampleValuesNote":"400,000 ಮತ್ತು 50,000 ಉದಾಹರಣೆ ಮೌಲ್ಯಗಳಾಗಿ ಮೊದಲೇ ತುಂಬಿವೆ. ನಿಮ್ಮ ನಿಜವಾದ ಮೌಲ್ಯಗಳನ್ನು ನಮೂದಿಸಿ.","homeSummaryTitle":"ನಿಮ್ಮ ಉತ್ಪಾದನಾ ಸಾರಾಂಶ","homeSummaryDesc":"ಎಲ್ಲಾ ಯಂತ್ರಗಳಿಗೆ ಇದೇ ಎರಡು ಇನ್‌ಪುಟ್ ಮೌಲ್ಯಗಳನ್ನು ಬಳಸಲಾಗುತ್ತದೆ."},"ml":{"homeScreenTitle":"പ്രൊഡക്ഷൻ ഡാഷ്‌ബോർഡ്","homeScreenDesc":"നിങ്ങളുടെ രണ്ട് ഉൽപ്പാദന മൂല്യങ്ങൾ ഒരിക്കൽ നൽകി എല്ലാ മെഷീനുകളും താരതമ്യം ചെയ്യുക.","goInput":"ഉൽപ്പാദനം നൽകുക","homeInputHint":"നിങ്ങളുടെ രണ്ട് സ്റ്റിച്ച് മൂല്യങ്ങൾ നൽകുക","goMachines":"മെഷീനുകൾ താരതമ്യം ചെയ്യുക","homeMachinesHint":"ദിവസം എത്ര മീറ്റർ ലഭിക്കുമെന്ന് കാണുക","inputScreenTitle":"പ്രൊഡക്ഷൻ ഇൻപുട്ട്","inputScreenDesc":"എല്ലാ മെഷീനുകൾക്കും ഈ രണ്ട് മൂല്യങ്ങൾ തന്നെയാണ് ഉപയോഗിക്കുന്നത്. ഫലങ്ങൾ ഉടൻ മാറും.","viewResults":"മെഷീൻ ഫലങ്ങൾ കാണുക","machinesScreenTitle":"മെഷീൻ താരതമ്യം","machinesScreenDesc":"ഓരോ മെഷീനിന്റെയും കണക്കാക്കിയ മീറ്റർ/ദിവസം ഉൽപ്പാദനം ഇവിടെ താരതമ്യം ചെയ്യുന്നു.","languageScreenTitle":"ഭാഷ തിരഞ്ഞെടുക്കുക","languageScreenDesc":"കാൽക്കുലേറ്ററിന്റെ ഭാഷ മാറ്റാൻ ഒരു ഭാഷ തിരഞ്ഞെടുക്കുക.","languageSearchPlaceholder":"ഭാഷകൾ തിരയുക","chooseLanguage":"ലഭ്യമായ ഭാഷകൾ","languageSelectHint":"നിങ്ങളുടെ തിരഞ്ഞെടുപ്പ് ഈ ഉപകരണത്തിൽ സൂക്ഷിക്കും.","sampleValuesNote":"400,000, 50,000 എന്നിവ ഉദാഹരണ മൂല്യങ്ങളായി മുൻകൂട്ടി നൽകിയിട്ടുണ്ട്. നിങ്ങളുടെ യഥാർത്ഥ മൂല്യങ്ങൾ നൽകുക.","homeSummaryTitle":"നിങ്ങളുടെ ഉൽപ്പാദന സംഗ്രഹം","homeSummaryDesc":"എല്ലാ മെഷീനുകൾക്കും ഈ രണ്ട് ഇൻപുട്ടുകൾ തന്നെയാണ് ഉപയോഗിക്കുന്നത്."},"pa":{"homeScreenTitle":"ਉਤਪਾਦਨ ਡੈਸ਼ਬੋਰਡ","homeScreenDesc":"ਆਪਣੇ ਉਤਪਾਦਨ ਦੇ ਦੋ ਮੁੱਲ ਇੱਕ ਵਾਰ ਭਰੋ ਅਤੇ ਸਾਰੀਆਂ ਮਸ਼ੀਨਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ।","goInput":"ਉਤਪਾਦਨ ਦਰਜ ਕਰੋ","homeInputHint":"ਆਪਣੇ ਦੋ ਸਟਿਚ ਮੁੱਲ ਭਰੋ","goMachines":"ਮਸ਼ੀਨਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ","homeMachinesHint":"ਰੋਜ਼ਾਨਾ ਮੀਟਰ ਉਤਪਾਦਨ ਵੇਖੋ","inputScreenTitle":"ਉਤਪਾਦਨ ਇਨਪੁੱਟ","inputScreenDesc":"ਸਾਰੀਆਂ ਮਸ਼ੀਨਾਂ ਲਈ ਇਹੀ ਦੋ ਮੁੱਲ ਵਰਤੇ ਜਾਣਗੇ। ਨਤੀਜੇ ਤੁਰੰਤ ਬਦਲਣਗੇ।","viewResults":"ਮਸ਼ੀਨ ਨਤੀਜੇ ਵੇਖੋ","machinesScreenTitle":"ਮਸ਼ੀਨ ਤੁਲਨਾ","machinesScreenDesc":"ਹਰ ਮਸ਼ੀਨ ਦੇ ਅੰਦਾਜ਼ੇ ਵਾਲੇ ਮੀਟਰ/ਦਿਨ ਉਤਪਾਦਨ ਦੀ ਤੁਲਨਾ ਇੱਥੇ ਹੈ।","languageScreenTitle":"ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ","languageScreenDesc":"ਕੈਲਕੁਲੇਟਰ ਦੀ ਭਾਸ਼ਾ ਬਦਲਣ ਲਈ ਭਾਸ਼ਾ ਚੁਣੋ।","languageSearchPlaceholder":"ਭਾਸ਼ਾਵਾਂ ਖੋਜੋ","chooseLanguage":"ਉਪਲਬਧ ਭਾਸ਼ਾਵਾਂ","languageSelectHint":"ਤੁਹਾਡੀ ਚੋਣ ਇਸ ਡਿਵਾਈਸ ਤੇ ਸੇਵ ਹੋਵੇਗੀ।","sampleValuesNote":"400,000 ਅਤੇ 50,000 ਉਦਾਹਰਨ ਵਜੋਂ ਪਹਿਲਾਂ ਭਰੇ ਹਨ। ਆਪਣੇ ਅਸਲ ਅੰਕ ਭਰੋ।","homeSummaryTitle":"ਤੁਹਾਡਾ ਉਤਪਾਦਨ ਸਾਰ","homeSummaryDesc":"ਸਾਰੀਆਂ ਮਸ਼ੀਨਾਂ ਲਈ ਇਹੀ ਦੋ ਇਨਪੁੱਟ ਮੁੱਲ ਵਰਤੇ ਜਾਂਦੇ ਹਨ।"},"ur":{"homeScreenTitle":"پیداواری ڈیش بورڈ","homeScreenDesc":"اپنی پیداوار کی دو قدریں ایک بار درج کریں اور تمام مشینوں کا موازنہ کریں۔","goInput":"پیداوار درج کریں","homeInputHint":"اپنی دونوں سٹچ قدریں درج کریں","goMachines":"مشینوں کا موازنہ کریں","homeMachinesHint":"روزانہ میٹر پیداوار دیکھیں","inputScreenTitle":"پیداواری ان پٹ","inputScreenDesc":"تمام مشینوں کے لیے یہی دو قدریں استعمال ہوں گی۔ نتائج فوراً بدلیں گے۔","viewResults":"مشینوں کے نتائج دیکھیں","machinesScreenTitle":"مشینوں کا موازنہ","machinesScreenDesc":"ہر مشین کی متوقع میٹر فی دن پیداوار یہاں موازنہ کی گئی ہے۔","languageScreenTitle":"اپنی زبان منتخب کریں","languageScreenDesc":"کیلکولیٹر کی زبان بدلنے کے لیے زبان منتخب کریں۔","languageSearchPlaceholder":"زبانیں تلاش کریں","chooseLanguage":"دستیاب زبانیں","languageSelectHint":"آپ کا انتخاب اس ڈیوائس میں محفوظ ہوگا۔","sampleValuesNote":"400,000 اور 50,000 مثال کے طور پر پہلے سے درج ہیں۔ اپنی اصل قدریں درج کریں۔","homeSummaryTitle":"آپ کی پیداوار کا خلاصہ","homeSummaryDesc":"تمام مشینوں کے لیے یہی دو ان پٹ قدریں استعمال ہوتی ہیں۔"},"ar":{"homeScreenTitle":"لوحة الإنتاج","homeScreenDesc":"أدخل قيمتي الإنتاج مرة واحدة ثم قارن جميع الآلات.","goInput":"أدخل الإنتاج","homeInputHint":"أدخل قيمتي الغرز","goMachines":"قارن الآلات","homeMachinesHint":"شاهد الأمتار المنتجة يوميًا","inputScreenTitle":"مدخلات الإنتاج","inputScreenDesc":"تُستخدم القيمتان نفسيهما لكل الآلات. تتحدث النتائج فورًا.","viewResults":"عرض نتائج الآلات","machinesScreenTitle":"مقارنة الآلات","machinesScreenDesc":"تتم مقارنة الأمتار المقدرة يوميًا لكل آلة هنا.","languageScreenTitle":"اختر لغتك","languageScreenDesc":"اختر لغة لترجمة الآلة الحاسبة بالكامل.","languageSearchPlaceholder":"ابحث عن اللغات","chooseLanguage":"اللغات المتاحة","languageSelectHint":"سيتم حفظ اختيارك على هذا الجهاز.","sampleValuesNote":"تم إدخال 400,000 و50,000 كقيم تجريبية. استبدلهما بقيمك الفعلية.","homeSummaryTitle":"ملخص الإنتاج","homeSummaryDesc":"تُستخدم قيمتا الإدخال نفسيهما لجميع الآلات."},"es":{"homeScreenTitle":"Panel de producción","homeScreenDesc":"Introduce tus dos valores de producción una vez y compara todas las máquinas.","goInput":"Introducir producción","homeInputHint":"Añade tus dos valores de puntadas","goMachines":"Comparar máquinas","homeMachinesHint":"Ver metros estimados por día","inputScreenTitle":"Datos de producción","inputScreenDesc":"Se usan los mismos dos valores para todas las máquinas. Los resultados se actualizan al instante.","viewResults":"Ver resultados de máquinas","machinesScreenTitle":"Comparación de máquinas","machinesScreenDesc":"Aquí se compara la producción estimada en metros por día de cada máquina.","languageScreenTitle":"Elige tu idioma","languageScreenDesc":"Toca un idioma para traducir toda la calculadora.","languageSearchPlaceholder":"Buscar idiomas","chooseLanguage":"Idiomas disponibles","languageSelectHint":"Tu selección se guarda en este dispositivo.","sampleValuesNote":"Los valores de ejemplo 400.000 y 50.000 están precargados. Sustitúyelos por tus datos reales.","homeSummaryTitle":"Resumen de producción","homeSummaryDesc":"Todas las máquinas usan los mismos dos valores de entrada."},"fr":{"homeScreenTitle":"Tableau de production","homeScreenDesc":"Saisissez vos deux valeurs une seule fois, puis comparez toutes les machines.","goInput":"Saisir la production","homeInputHint":"Ajoutez vos deux valeurs de points","goMachines":"Comparer les machines","homeMachinesHint":"Voir les mètres estimés par jour","inputScreenTitle":"Données de production","inputScreenDesc":"Les mêmes deux valeurs sont utilisées pour toutes les machines. Les résultats changent instantanément.","viewResults":"Voir les résultats des machines","machinesScreenTitle":"Comparaison des machines","machinesScreenDesc":"La production estimée en mètres par jour est comparée ici pour chaque machine.","languageScreenTitle":"Choisir votre langue","languageScreenDesc":"Touchez une langue pour traduire toute la calculatrice.","languageSearchPlaceholder":"Rechercher une langue","chooseLanguage":"Langues disponibles","languageSelectHint":"Votre choix est enregistré sur cet appareil.","sampleValuesNote":"Les valeurs d’exemple 400 000 et 50 000 sont préremplies. Remplacez-les par vos chiffres réels.","homeSummaryTitle":"Résumé de production","homeSummaryDesc":"Les deux mêmes valeurs sont utilisées pour toutes les machines."},"de":{"homeScreenTitle":"Produktionsübersicht","homeScreenDesc":"Geben Sie Ihre zwei Produktionswerte einmal ein und vergleichen Sie alle Maschinen.","goInput":"Produktion eingeben","homeInputHint":"Geben Sie Ihre zwei Stichwerte ein","goMachines":"Maschinen vergleichen","homeMachinesHint":"Geschätzte Meter pro Tag ansehen","inputScreenTitle":"Produktionseingaben","inputScreenDesc":"Für alle Maschinen werden dieselben zwei Werte verwendet. Die Ergebnisse werden sofort aktualisiert.","viewResults":"Maschinenergebnisse ansehen","machinesScreenTitle":"Maschinenvergleich","machinesScreenDesc":"Hier wird die geschätzte Meterproduktion pro Tag jeder Maschine verglichen.","languageScreenTitle":"Sprache auswählen","languageScreenDesc":"Tippen Sie auf eine Sprache, um den Rechner vollständig zu übersetzen.","languageSearchPlaceholder":"Sprachen suchen","chooseLanguage":"Verfügbare Sprachen","languageSelectHint":"Ihre Auswahl wird auf diesem Gerät gespeichert.","sampleValuesNote":"Die Beispielwerte 400.000 und 50.000 sind vorausgefüllt. Ersetzen Sie sie durch Ihre tatsächlichen Werte.","homeSummaryTitle":"Produktionsübersicht","homeSummaryDesc":"Für alle Maschinen gelten dieselben zwei Eingabewerte."},"pt":{"homeScreenTitle":"Painel de produção","homeScreenDesc":"Insira seus dois valores de produção uma vez e compare todas as máquinas.","goInput":"Inserir produção","homeInputHint":"Adicione seus dois valores de pontos","goMachines":"Comparar máquinas","homeMachinesHint":"Ver metros estimados por dia","inputScreenTitle":"Dados de produção","inputScreenDesc":"Os mesmos dois valores são usados em todas as máquinas. Os resultados são atualizados instantaneamente.","viewResults":"Ver resultados das máquinas","machinesScreenTitle":"Comparação de máquinas","machinesScreenDesc":"A produção estimada em metros por dia de cada máquina é comparada aqui.","languageScreenTitle":"Escolha seu idioma","languageScreenDesc":"Toque em um idioma para traduzir toda a calculadora.","languageSearchPlaceholder":"Pesquisar idiomas","chooseLanguage":"Idiomas disponíveis","languageSelectHint":"Sua escolha será salva neste dispositivo.","sampleValuesNote":"Os valores de exemplo 400.000 e 50.000 já estão preenchidos. Substitua-os pelos seus dados reais.","homeSummaryTitle":"Resumo da produção","homeSummaryDesc":"Todas as máquinas usam os mesmos dois valores de entrada."},"ru":{"homeScreenTitle":"Панель производства","homeScreenDesc":"Введите два значения один раз и сравните все машины.","goInput":"Ввести данные","homeInputHint":"Введите два значения стежков","goMachines":"Сравнить машины","homeMachinesHint":"Посмотреть метры в день","inputScreenTitle":"Ввод производства","inputScreenDesc":"Для всех машин используются одни и те же два значения. Результаты обновляются сразу.","viewResults":"Посмотреть результаты машин","machinesScreenTitle":"Сравнение машин","machinesScreenDesc":"Здесь сравнивается расчетный выпуск метров ткани в день для каждой машины.","languageScreenTitle":"Выберите язык","languageScreenDesc":"Нажмите на язык, чтобы перевести весь калькулятор.","languageSearchPlaceholder":"Поиск языков","chooseLanguage":"Доступные языки","languageSelectHint":"Ваш выбор сохранится на этом устройстве.","sampleValuesNote":"Примеры 400 000 и 50 000 уже заполнены. Замените их фактическими значениями.","homeSummaryTitle":"Сводка производства","homeSummaryDesc":"Для всех машин используются одни и те же два значения."},"zh":{"homeScreenTitle":"生产仪表板","homeScreenDesc":"只需输入一次两个生产数值，即可比较所有机器。","goInput":"输入产量","homeInputHint":"输入两个针数值","goMachines":"比较机器","homeMachinesHint":"查看每日预计米数","inputScreenTitle":"生产输入","inputScreenDesc":"所有机器使用相同的两个数值，结果会立即更新。","viewResults":"查看机器结果","machinesScreenTitle":"机器比较","machinesScreenDesc":"此处比较每台机器预计每天生产的布料米数。","languageScreenTitle":"选择语言","languageScreenDesc":"点击语言即可翻译整个计算器。","languageSearchPlaceholder":"搜索语言","chooseLanguage":"可用语言","languageSelectHint":"您的选择将保存在此设备上。","sampleValuesNote":"已预填示例值 400,000 和 50,000。请替换为您的实际数据。","homeSummaryTitle":"生产摘要","homeSummaryDesc":"所有机器都使用相同的两个输入值。"},"ja":{"homeScreenTitle":"生産ダッシュボード","homeScreenDesc":"2つの生産値を一度入力するだけで、すべての機械を比較できます。","goInput":"生産量を入力","homeInputHint":"2つのステッチ値を入力","goMachines":"機械を比較","homeMachinesHint":"1日あたりのメートル数を見る","inputScreenTitle":"生産入力","inputScreenDesc":"すべての機械で同じ2つの値を使用します。結果はすぐに更新されます。","viewResults":"機械の結果を見る","machinesScreenTitle":"機械の比較","machinesScreenDesc":"各機械の1日あたりの推定メートル生産量を比較します。","languageScreenTitle":"言語を選択","languageScreenDesc":"言語をタップすると計算ツール全体が翻訳されます。","languageSearchPlaceholder":"言語を検索","chooseLanguage":"利用可能な言語","languageSelectHint":"選択内容はこの端末に保存されます。","sampleValuesNote":"例として400,000と50,000が入力済みです。実際の値に変更してください。","homeSummaryTitle":"生産の概要","homeSummaryDesc":"すべての機械で同じ2つの入力値を使用します。"},"ko":{"homeScreenTitle":"생산 대시보드","homeScreenDesc":"두 가지 생산 값을 한 번 입력하고 모든 기계를 비교하세요.","goInput":"생산량 입력","homeInputHint":"두 스티치 값을 입력하세요","goMachines":"기계 비교","homeMachinesHint":"일일 미터 생산량 보기","inputScreenTitle":"생산 입력","inputScreenDesc":"모든 기계에 동일한 두 값을 사용하며 결과는 즉시 업데이트됩니다.","viewResults":"기계 결과 보기","machinesScreenTitle":"기계 비교","machinesScreenDesc":"각 기계의 예상 일일 미터 생산량을 비교합니다.","languageScreenTitle":"언어 선택","languageScreenDesc":"언어를 선택하면 계산기 전체가 번역됩니다.","languageSearchPlaceholder":"언어 검색","chooseLanguage":"사용 가능한 언어","languageSelectHint":"선택한 언어는 이 기기에 저장됩니다.","sampleValuesNote":"예시 값 400,000과 50,000이 미리 입력되어 있습니다. 실제 값으로 바꾸세요.","homeSummaryTitle":"생산 요약","homeSummaryDesc":"모든 기계가 동일한 두 입력 값을 사용합니다."},"id":{"homeScreenTitle":"Dasbor produksi","homeScreenDesc":"Masukkan dua nilai produksi sekali, lalu bandingkan semua mesin.","goInput":"Masukkan produksi","homeInputHint":"Masukkan dua nilai jahitan","goMachines":"Bandingkan mesin","homeMachinesHint":"Lihat meter per hari","inputScreenTitle":"Input produksi","inputScreenDesc":"Semua mesin memakai dua nilai yang sama. Hasil langsung diperbarui.","viewResults":"Lihat hasil mesin","machinesScreenTitle":"Perbandingan mesin","machinesScreenDesc":"Produksi meter per hari setiap mesin dibandingkan di sini.","languageScreenTitle":"Pilih bahasa","languageScreenDesc":"Ketuk bahasa untuk menerjemahkan seluruh kalkulator.","languageSearchPlaceholder":"Cari bahasa","chooseLanguage":"Bahasa tersedia","languageSelectHint":"Pilihan Anda disimpan di perangkat ini.","sampleValuesNote":"Nilai contoh 400.000 dan 50.000 sudah terisi. Ganti dengan angka sebenarnya.","homeSummaryTitle":"Ringkasan produksi","homeSummaryDesc":"Semua mesin memakai dua nilai input yang sama."},"it":{"homeScreenTitle":"Dashboard produzione","homeScreenDesc":"Inserisci i due valori di produzione una sola volta e confronta tutte le macchine.","goInput":"Inserisci produzione","homeInputHint":"Inserisci i due valori dei punti","goMachines":"Confronta macchine","homeMachinesHint":"Vedi i metri stimati al giorno","inputScreenTitle":"Dati di produzione","inputScreenDesc":"Tutte le macchine usano gli stessi due valori. I risultati si aggiornano subito.","viewResults":"Vedi risultati macchine","machinesScreenTitle":"Confronto macchine","machinesScreenDesc":"Qui viene confrontata la produzione stimata in metri al giorno di ogni macchina.","languageScreenTitle":"Scegli la lingua","languageScreenDesc":"Tocca una lingua per tradurre tutto il calcolatore.","languageSearchPlaceholder":"Cerca lingue","chooseLanguage":"Lingue disponibili","languageSelectHint":"La scelta viene salvata su questo dispositivo.","sampleValuesNote":"I valori di esempio 400.000 e 50.000 sono già inseriti. Sostituiscili con i tuoi dati reali.","homeSummaryTitle":"Riepilogo produzione","homeSummaryDesc":"Tutte le macchine usano gli stessi due valori."},"tr":{"homeScreenTitle":"Üretim paneli","homeScreenDesc":"İki üretim değerinizi bir kez girin ve tüm makineleri karşılaştırın.","goInput":"Üretimi gir","homeInputHint":"İki dikiş değerinizi girin","goMachines":"Makineleri karşılaştır","homeMachinesHint":"Günlük tahmini metreyi görün","inputScreenTitle":"Üretim girdileri","inputScreenDesc":"Tüm makinelerde aynı iki değer kullanılır. Sonuçlar anında güncellenir.","viewResults":"Makine sonuçlarını gör","machinesScreenTitle":"Makine karşılaştırması","machinesScreenDesc":"Her makinenin tahmini günlük metre üretimi burada karşılaştırılır.","languageScreenTitle":"Dilini seç","languageScreenDesc":"Hesaplayıcının tamamını çevirmek için bir dile dokunun.","languageSearchPlaceholder":"Dilleri ara","chooseLanguage":"Kullanılabilir diller","languageSelectHint":"Seçiminiz bu cihazda kaydedilir.","sampleValuesNote":"Örnek 400.000 ve 50.000 değerleri önceden dolduruldu. Gerçek değerlerinizle değiştirin.","homeSummaryTitle":"Üretim özeti","homeSummaryDesc":"Tüm makineler aynı iki girdi değerini kullanır."},"vi":{"homeScreenTitle":"Bảng điều khiển sản xuất","homeScreenDesc":"Nhập hai giá trị sản xuất một lần rồi so sánh tất cả máy.","goInput":"Nhập sản lượng","homeInputHint":"Nhập hai giá trị mũi chỉ","goMachines":"So sánh máy","homeMachinesHint":"Xem số mét ước tính mỗi ngày","inputScreenTitle":"Dữ liệu sản xuất","inputScreenDesc":"Tất cả máy dùng chung hai giá trị này. Kết quả cập nhật ngay lập tức.","viewResults":"Xem kết quả máy","machinesScreenTitle":"So sánh máy","machinesScreenDesc":"Sản lượng mét vải ước tính mỗi ngày của từng máy được so sánh tại đây.","languageScreenTitle":"Chọn ngôn ngữ","languageScreenDesc":"Chạm vào một ngôn ngữ để dịch toàn bộ máy tính.","languageSearchPlaceholder":"Tìm ngôn ngữ","chooseLanguage":"Ngôn ngữ khả dụng","languageSelectHint":"Lựa chọn được lưu trên thiết bị này.","sampleValuesNote":"Giá trị mẫu 400.000 và 50.000 đã được điền sẵn. Hãy thay bằng số liệu thực tế.","homeSummaryTitle":"Tóm tắt sản xuất","homeSummaryDesc":"Tất cả máy đều dùng chung hai giá trị đầu vào."},"th":{"homeScreenTitle":"แดชบอร์ดการผลิต","homeScreenDesc":"ป้อนค่าการผลิตสองค่าเพียงครั้งเดียว แล้วเปรียบเทียบทุกเครื่อง","goInput":"ป้อนการผลิต","homeInputHint":"ป้อนค่าฝีเข็มสองค่า","goMachines":"เปรียบเทียบเครื่องจักร","homeMachinesHint":"ดูจำนวนเมตรต่อวันโดยประมาณ","inputScreenTitle":"ข้อมูลการผลิต","inputScreenDesc":"ทุกเครื่องใช้ค่าทั้งสองชุดเดียวกัน ผลลัพธ์จะอัปเดตทันที","viewResults":"ดูผลลัพธ์เครื่องจักร","machinesScreenTitle":"เปรียบเทียบเครื่องจักร","machinesScreenDesc":"เปรียบเทียบผลผลิตผ้าเป็นเมตรต่อวันโดยประมาณของแต่ละเครื่องที่นี่","languageScreenTitle":"เลือกภาษา","languageScreenDesc":"แตะภาษาเพื่อแปลเครื่องคำนวณทั้งหมด","languageSearchPlaceholder":"ค้นหาภาษา","chooseLanguage":"ภาษาที่ใช้ได้","languageSelectHint":"การเลือกของคุณจะถูกบันทึกไว้ในอุปกรณ์นี้","sampleValuesNote":"มีค่าเริ่มต้นตัวอย่าง 400,000 และ 50,000 กรุณาเปลี่ยนเป็นค่าจริงของคุณ","homeSummaryTitle":"สรุปการผลิต","homeSummaryDesc":"ทุกเครื่องใช้ค่าป้อนเข้าทั้งสองค่าเดียวกัน"}};
+  Object.entries(appPageTranslations).forEach(([code, values])=>{if(translations[code])Object.assign(translations[code],values,{searchLanguages:values.languageSearchPlaceholder});});
+  const footerCopy={
+    en:'Production is an estimate based on the two stitch values entered and the machine head/area configuration.',
+    gu:'ઉત્પાદનનો આંકડો દાખલ કરેલા બે સ્ટિચના આંકડા અને મશીનના હેડ/એરિયા પ્રમાણેનો અંદાજ છે.',
+    hi:'उत्पादन आपके दिए गए दो स्टिच मानों और मशीन के हेड/एरिया कॉन्फ़िगरेशन पर आधारित अनुमान है।',
+    mr:'उत्पादन हा तुम्ही दिलेल्या दोन स्टिच आकड्यांवर आणि मशीनच्या हेड/एरिया रचनेवर आधारित अंदाज आहे.',
+    bn:'উৎপাদন আপনার দেওয়া দুটি স্টিচ মান এবং মেশিনের হেড/এরিয়া কনফিগারেশনের ভিত্তিতে একটি অনুমান।',
+    ta:'உற்பத்தி என்பது நீங்கள் உள்ளிட்ட இரண்டு ஸ்டிச் மதிப்புகள் மற்றும் இயந்திரத்தின் ஹெட்/ஏரியா அமைப்பின் அடிப்படையிலான மதிப்பீடு.',
+    te:'ఉత్పత్తి అనేది మీరు నమోదు చేసిన రెండు స్టిచ్ విలువలు మరియు మెషిన్ హెడ్/ఏరియా అమరిక ఆధారంగా చేసిన అంచనా.',
+    kn:'ಉತ್ಪಾದನೆಯು ನೀವು ನಮೂದಿಸಿದ ಎರಡು ಸ್ಟಿಚ್ ಮೌಲ್ಯಗಳು ಮತ್ತು ಯಂತ್ರದ ಹೆಡ್/ಏರಿಯಾ ವಿನ್ಯಾಸದ ಆಧಾರದ ಅಂದಾಜು.',
+    ml:'നിങ്ങൾ നൽകിയ രണ്ട് സ്റ്റിച്ച് മൂല്യങ്ങളും മെഷീന്റെ ഹെഡ്/ഏരിയ ക്രമീകരണവും അടിസ്ഥാനമാക്കിയുള്ള ഏകദേശ ഉൽപ്പാദനമാണിത്.',
+    pa:'ਉਤਪਾਦਨ ਤੁਹਾਡੇ ਦਿੱਤੇ ਦੋ ਸਟਿਚ ਮੁੱਲਾਂ ਅਤੇ ਮਸ਼ੀਨ ਦੇ ਹੈੱਡ/ਏਰੀਆ ਸੈਟਅੱਪ ਦੇ ਆਧਾਰ ਤੇ ਅੰਦਾਜ਼ਾ ਹੈ।',
+    ur:'پیداوار آپ کی درج کردہ دو اسٹچ قدروں اور مشین کے ہیڈ/ایریا کی ترتیب پر مبنی اندازہ ہے۔',
+    ar:'الإنتاج تقدير يعتمد على قيمتي الغرز اللتين أدخلتهما وإعداد عدد الرؤوس والمساحة للآلة.',
+    es:'La producción es una estimación basada en los dos valores de puntadas y la configuración de cabezales/área.',
+    fr:'La production est une estimation basée sur les deux valeurs de points et la configuration des têtes et de la zone.',
+    de:'Die Produktion ist eine Schätzung auf Basis der zwei Stichwerte und der Kopf-/Flächenkonfiguration der Maschine.',
+    pt:'A produção é uma estimativa baseada nos dois valores de pontos e na configuração de cabeçotes/área da máquina.',
+    ru:'Производство рассчитано приблизительно на основе двух введённых значений стежков и конфигурации головок/поля машины.',
+    zh:'产量是根据您输入的两个针数值以及机器机头/面积配置计算的估算值。',
+    ja:'生産量は、入力した2つのステッチ値と機械のヘッド数・エリア構成に基づく推定値です。',
+    ko:'생산량은 입력한 두 스티치 값과 기계의 헤드/면적 구성에 따른 예상치입니다.',
+    id:'Produksi merupakan perkiraan berdasarkan dua nilai jahitan yang dimasukkan serta konfigurasi head/area mesin.',
+    it:'La produzione è una stima basata sui due valori di punti inseriti e sulla configurazione di teste/area della macchina.',
+    tr:'Üretim, girdiğiniz iki dikiş değeri ve makinenin kafa/alan yapılandırmasına dayalı bir tahmindir.',
+    vi:'Sản lượng là ước tính dựa trên hai giá trị mũi chỉ bạn nhập và cấu hình đầu máy/diện tích.',
+    th:'ผลผลิตเป็นค่าประมาณจากค่าฝีเข็มสองค่าที่คุณป้อนและการตั้งค่าจำนวนหัว/พื้นที่ของเครื่องจักร。'
+  };
+  Object.entries(footerCopy).forEach(([code,value])=>{if(translations[code])translations[code].appFooter=value;});
+  const noLanguageCopy={en:'No languages found',gu:'કોઈ ભાષા મળી નથી',hi:'कोई भाषा नहीं मिली',mr:'भाषा सापडली नाही',es:'No se encontraron idiomas',fr:'Aucune langue trouvée',de:'Keine Sprache gefunden',pt:'Nenhum idioma encontrado',it:'Nessuna lingua trovata',ar:'لم يتم العثور على لغات',zh:'未找到语言',ja:'言語が見つかりません',ko:'언어를 찾을 수 없습니다'};
+  Object.entries(noLanguageCopy).forEach(([code,value])=>{if(translations[code])translations[code].noLanguagesFound=value;});
 
   const sharedUiText={
     en:{sharedInputNote:'Enter these two values once. Results for every machine update automatically.',enterDataText:'Enter Daily Stitch Production and Stitches per Frame above. Every machine will be calculated and compared automatically.'},
@@ -300,7 +443,7 @@ body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),t
   let machines=loadMachines();
   let sharedInputs=loadSharedInputs();
   function loadMachines(){try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)&&parsed.length)return parsed.map(m=>({id:m.id||('machine-'+Math.random()),head:Number(m.head),area:Number(m.area),source:m.source||'Custom'})).filter(m=>m.head>0&&m.area>0);}}catch(e){}return defaults.map(x=>({...x}));}
-  function loadSharedInputs(){try{const x=JSON.parse(localStorage.getItem(INPUT_KEY)||'{}');return{daily:x.daily??'',per:x.per??''};}catch(e){return{daily:'',per:''};}}
+  function loadSharedInputs(){try{const raw=localStorage.getItem(INPUT_KEY);if(raw===null)return{daily:400000,per:50000};const x=JSON.parse(raw||'{}');return{daily:x.daily??'',per:x.per??''};}catch(e){return{daily:400000,per:50000};}}
   function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(machines));}catch(e){}}
   function persistInputs(){try{localStorage.setItem(INPUT_KEY,JSON.stringify(sharedInputs));}catch(e){}}
   function label(m){return `${m.head} ${t('machineHead')} · ${t('areaMm')} ${m.area}`;}
@@ -315,6 +458,8 @@ body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),t
     $('perFrame').placeholder=lang==='gu'?'ઉદાહરણ: 50000':t('exampleHead').replace(/27/,'50000');
     $('customHead').placeholder=t('exampleHead');$('customArea').placeholder=t('exampleArea');
     const ls=$('languageSelect');ls.innerHTML='';languages.forEach(([code,name])=>{const o=document.createElement('option');o.value=code;o.textContent=name;ls.appendChild(o);});ls.value=lang;
+    const currentName=languages.find(x=>x[0]===lang)?.[1]||'English';$('currentLanguageName').textContent=currentName;$('selectedLanguageBadge').textContent=lang.toUpperCase();
+    $('languageSearch').placeholder=t('languageSearchPlaceholder');renderLanguageGrid();
     renderResults();
   }
   function resultBasis(c){
@@ -329,6 +474,8 @@ body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),t
     $('resultCount').textContent=`${complete.length} ${t('calculated')} · ${machines.length} ${t('total')}`;
     $('heroBest').textContent=best?`${fmt(best.c.meter)} ${t('meterDay').toLowerCase()}`:'—';
     $('heroBestName').textContent=best?label(best.m):t('enterDataTitle');
+    $('homeDailyValue').textContent=sharedInputs.daily===''?'—':fmt(sharedInputs.daily);$('homeFrameValue').textContent=sharedInputs.per===''?'—':fmt(sharedInputs.per);
+    $('homeBestSummary').textContent=best?`${t('bestBadge')}: ${label(best.m)} · ${fmt(best.c.meter)} ${t('meterDay')}`:t('enterDataTitle');
 
     const results=$('results');results.innerHTML='';
     const maxMeter=best?best.c.meter:0;
@@ -393,39 +540,65 @@ body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),t
     sharedInputs.daily=d===''?'':Number(d);sharedInputs.per=p===''?'':Number(p);
     persistInputs();renderResults();
   }
-  $('languageSelect').addEventListener('change',e=>{lang=e.target.value;if(!translations[lang])lang='en';try{localStorage.setItem(LANG_KEY,lang);}catch(e){}applyLanguage();});
+  function changeLanguage(code){
+    if(!translations[code])return;
+    lang=code;
+    try{localStorage.setItem(LANG_KEY,lang);}catch(e){}
+    applyLanguage();
+    renderLanguageGrid();
+  }
+  function renderLanguageGrid(){
+    const grid=$('languageGrid');if(!grid)return;
+    const query=($('languageSearch')?.value||'').trim().toLowerCase();
+    grid.innerHTML='';
+    languages.filter(([code,name])=>!query||name.toLowerCase().includes(query)||code.toLowerCase().includes(query)).forEach(([code,name])=>{
+      const button=document.createElement('button');button.type='button';
+      button.className='language-option'+(code===lang?' active':'');
+      button.setAttribute('aria-pressed',String(code===lang));
+      const native=document.createElement('span');native.className='language-native';native.textContent=name;
+      const codeEl=document.createElement('span');codeEl.className='language-code';codeEl.textContent=code.toUpperCase();
+      button.append(native,codeEl);
+      if(code===lang){const check=document.createElement('span');check.className='language-check';check.textContent='✓';button.appendChild(check);}
+      button.addEventListener('click',()=>changeLanguage(code));
+      grid.appendChild(button);
+    });
+    if(!grid.children.length){const empty=document.createElement('div');empty.className='sub';empty.textContent=t('noLanguagesFound');grid.appendChild(empty);}
+  }
+  const screenIds={home:'screen-home',input:'screen-input',machines:'screen-machines',language:'screen-language'};
+  function showScreen(name){
+    if(!screenIds[name])return;
+    Object.entries(screenIds).forEach(([key,id])=>$(id).classList.toggle('active',key===name));
+    document.querySelectorAll('.app-tab').forEach(tab=>{
+      const active=tab.dataset.tab===name;
+      tab.classList.toggle('active',active);
+      if(active)tab.setAttribute('aria-current','page');else tab.removeAttribute('aria-current');
+    });
+    if(name==='machines')renderResults();
+    if(name==='language')renderLanguageGrid();
+    try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){window.scrollTo(0,0);}
+    try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light');}catch(e){}
+    try{if(tg&&typeof tg.BackButton!=='undefined'){if(name==='home')tg.BackButton.hide();else tg.BackButton.show();}}catch(e){}
+    activeScreen=name;
+  }
+  let activeScreen='home';
+  $('languageSelect').addEventListener('change',e=>changeLanguage(e.target.value));
+  $('languageSearch').addEventListener('input',renderLanguageGrid);
+  $('headerLanguageButton').addEventListener('click',()=>showScreen('language'));
+  document.querySelectorAll('.app-tab').forEach(tab=>tab.addEventListener('click',()=>showScreen(tab.dataset.tab)));
+  document.querySelectorAll('[data-go-screen]').forEach(button=>button.addEventListener('click',()=>showScreen(button.dataset.goScreen)));
+  $('goToMachinesButton').addEventListener('click',()=>showScreen('machines'));
+  try{if(tg&&tg.BackButton){tg.BackButton.onClick(()=>showScreen('home'));}}catch(e){}
+
   $('dailyStitch').addEventListener('input',updateCurrentFromInputs);$('perFrame').addEventListener('input',updateCurrentFromInputs);
   $('dailyStitch').addEventListener('keydown',e=>{if(e.key==='Enter')$('perFrame').focus();});
   $('addBtn').addEventListener('click',()=>{$('modal').classList.add('show');$('customHead').focus();});$('cancelModal').addEventListener('click',()=>$('modal').classList.remove('show'));$('modal').addEventListener('click',e=>{if(e.target===$('modal'))$('modal').classList.remove('show');});
   $('saveCustom').addEventListener('click',()=>{const h=Number($('customHead').value),a=Number($('customArea').value);if(!(h>0&&a>0)){alert(t('alertMachine'));return;}const id='custom-'+Date.now();machines.push({id,head:h,area:a,source:'Custom'});persist();renderResults();$('customHead').value='';$('customArea').value='';$('modal').classList.remove('show');});
   $('resetBtn').addEventListener('click',()=>{if(!confirm(t('confirmReset')))return;machines=defaults.map(x=>({...x}));sharedInputs={daily:'',per:''};persist();persistInputs();renderResults();});
+  try{if(tg&&tg.BackButton)tg.BackButton.hide();}catch(e){}
 
-  // App-style bottom navigation for mobile and Telegram Mini Apps.
-  document.querySelectorAll('.app-tab').forEach(tab=>{
-    tab.addEventListener('click',()=>{
-      document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
-      tab.classList.add('active');
-      try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light');}catch(_){}
-      const target=$(tab.dataset.target);
-      if(tab.dataset.tab==='language'){
-        $('languageSelect').scrollIntoView({behavior:'smooth',block:'center'});
-        try{$('languageSelect').focus({preventScroll:true});}catch(_){$('languageSelect').focus();}
-      }else if(target){target.scrollIntoView({behavior:'smooth',block:'start'});}
-    });
-  });
-  // Keep the active tab in sync when the user scrolls manually.
-  if('IntersectionObserver' in window){
-    const navTargets=[['appTop','home'],['inputPanel','input'],['machinePanel','machines']];
-    const observer=new IntersectionObserver(entries=>{
-      const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(!visible)return;
-      const found=navTargets.find(x=>x[0]===visible.target.id);
-      if(found){document.querySelectorAll('.app-tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===found[1]));}
-    },{rootMargin:'-22% 0px -60% 0px',threshold:[0,.15,.35]});
-    navTargets.forEach(([id])=>{const el=$(id);if(el)observer.observe(el);});
-  }
 
   applyLanguage();
+  showScreen('home');
 })();
 </script>
 </body></html>
