@@ -2,7 +2,12 @@
 <html lang="gu">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#08111f"><title>Machine Production Compare – Automatic Meter/Day</title>
+<meta name="theme-color" content="#08111f">
+<meta name="description" content="Compare estimated daily fabric meter production across embroidery machines using daily stitch production and stitches per frame.">
+<meta property="og:title" content="Machine Production Compare">
+<meta property="og:description" content="Enter two stitch values once and compare estimated meter-per-day production for every machine.">
+<meta property="og:type" content="website">
+<title>Machine Production Compare – Automatic Meter/Day</title>
 <style>
 :root{--bg:#07111f;--panel:#101d30;--panel2:#14243a;--line:rgba(255,255,255,.11);--text:#f4f7fb;--muted:#a6b4c7;--cyan:#65d7e8;--green:#56d6a0;--gold:#f3c86b;--shadow:0 22px 60px rgba(0,0,0,.28)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(900px 520px at 90% -5%,rgba(38,130,165,.22),transparent 60%),radial-gradient(700px 430px at -10% 15%,rgba(76,105,192,.18),transparent 60%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
@@ -189,7 +194,8 @@
   Object.entries(outputCopy).forEach(([code,values])=>{if(translations[code])Object.assign(translations[code],values);});
 
   // English fallback is used for any key that does not have a localized equivalent.
-  let lang=localStorage.getItem(LANG_KEY)||'gu';
+  let lang='gu';
+  try{lang=localStorage.getItem(LANG_KEY)||'gu';}catch(e){}
   if(!translations[lang])lang='gu';
   const $=id=>document.getElementById(id), fmt=n=>Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
   const t=k=>(translations[lang]&&translations[lang][k])||translations.en[k]||k;
@@ -203,6 +209,8 @@
   function calc(m){const d=Number(sharedInputs.daily),p=Number(sharedInputs.per);if(!(d>0&&p>0))return null;const totalFrameMeter=m.head*m.area/1000,dailyFrame=d/p;return{totalFrameMeter,dailyFrame,meter:totalFrameMeter*dailyFrame};}
   function applyLanguage(){
     const dict=translations[lang]||translations.en;
+    $('dailyStitch').value=sharedInputs.daily===''?'':String(sharedInputs.daily);
+    $('perFrame').value=sharedInputs.per===''?'':String(sharedInputs.per);
     document.documentElement.lang=lang;document.documentElement.dir=(lang==='ar'||lang==='ur')?'rtl':'ltr';
     document.querySelectorAll('[data-t]').forEach(el=>{const key=el.dataset.t;el.textContent=t(key);});
     $('dailyStitch').placeholder=lang==='gu'?'ઉદાહરણ: 400000':t('exampleHead').replace(/27/,'400000');
