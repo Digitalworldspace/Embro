@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Embroidery Calc">
 <meta name="description" content="Compare estimated daily fabric meter production across embroidery machines using daily stitch production and stitches per frame.">
 <meta property="og:title" content="Machine Production Compare">
 <meta property="og:description" content="Enter two stitch values once and compare estimated meter-per-day production for every machine.">
@@ -26,11 +30,73 @@
 .result-basis{margin-top:8px;color:#b8c8d9;font-size:10px;line-height:1.55;background:#ffffff08;border:1px solid #ffffff10;padding:8px 9px;border-radius:9px;overflow-wrap:anywhere}.result-basis strong{color:#eaf4fb;font-weight:800}.result-prompt{margin-top:8px;color:#f3c86b;font-size:10px;line-height:1.5}
 body{padding-bottom:env(safe-area-inset-bottom,0px)}
 .telegram-mini-app .wrap{padding-top:max(12px,env(safe-area-inset-top,12px))}
+
+/* App-like interface refinements */
+:root{--app-accent:#6fe1d0;--app-accent2:#71a7ff;--app-surface:#101e31;--app-surface-2:#14253b;--app-radius:22px}
+html{scroll-padding-top:88px;scroll-behavior:smooth}
+body{background:radial-gradient(800px 440px at 50% -180px,rgba(83,177,222,.25),transparent 70%),linear-gradient(180deg,#081321 0%,#07111f 55%,#091625 100%);padding-bottom:calc(102px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:780px;padding:15px 16px 38px}
+.top{position:sticky;top:0;z-index:8;margin:0 -16px 15px;padding:10px 16px 12px;background:rgba(7,17,31,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.075)}
+.logo{border-radius:14px;background:linear-gradient(145deg,#7ce8d5,#6d9eff);box-shadow:0 8px 24px rgba(88,203,218,.24)}
+.brand h1{font-size:16px;font-weight:850}
+.eyebrow{font-size:9px;letter-spacing:1.5px}
+.top-pill{font-size:10px;border-color:rgba(111,225,208,.22);background:rgba(111,225,208,.08);color:#9ddbd5}
+.lang-select{border-radius:13px!important;background:#12233a!important;border-color:rgba(255,255,255,.12)!important}
+.hero{grid-template-columns:1fr;gap:11px;margin-bottom:13px}
+.hero-main{padding:21px 21px 22px;border-radius:25px;background:linear-gradient(135deg,rgba(27,57,79,.98),rgba(15,31,51,.98));border-color:rgba(111,225,208,.18)}
+.hero-main:after{width:230px;height:230px;right:-115px;top:-120px;background:radial-gradient(circle,rgba(111,225,208,.19),rgba(111,225,208,0) 68%)}
+.hero h2{font-size:clamp(24px,5vw,32px);line-height:1.12;letter-spacing:-.8px;margin:8px 0 9px}
+.hero p{font-size:12px;line-height:1.6;max-width:610px}
+.hero-side{padding:14px 17px;border-radius:19px;grid-template-columns:1fr 1fr;gap:10px;background:rgba(16,30,49,.86);box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.stat-label{font-size:9px;letter-spacing:.75px}
+.stat-number{font-size:22px;margin-top:4px}
+.stat-foot{font-size:10px}
+.grid{grid-template-columns:1fr;gap:13px}
+.card{padding:18px;border-radius:22px;background:linear-gradient(155deg,rgba(19,36,57,.98),rgba(12,25,42,.98));box-shadow:0 12px 32px rgba(0,0,0,.17);border-color:rgba(255,255,255,.09)}
+.card-head,.section-title{margin-bottom:12px}
+.card h3,.section-title h3{font-size:15px}
+.sub{font-size:10px}
+.shared-note{border-radius:14px;background:rgba(111,225,208,.075);border-color:rgba(111,225,208,.17);padding:12px;margin:10px 0 15px;font-size:11px}
+.field{margin:15px 0}
+.field label{font-size:12px;margin-bottom:8px}
+.input,select{min-height:54px;border-radius:15px;padding:15px 14px;font-size:16px;background:#091727;border-color:rgba(255,255,255,.13)}
+.input:focus,select:focus{border-color:var(--app-accent);box-shadow:0 0 0 4px rgba(111,225,208,.11)}
+.btn{min-height:47px;border-radius:14px;font-size:12px}
+.btn-primary{background:linear-gradient(105deg,#73e3d0,#8bc5ff);box-shadow:0 10px 22px rgba(84,199,197,.2)}
+.btn-ghost{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.12)}
+.result{padding:14px;border-radius:18px;background:linear-gradient(120deg,#142942,#102036);border-color:rgba(255,255,255,.09);transition:transform .18s,border-color .18s,background .18s}
+.result:active{transform:scale(.99)}
+.result.best{background:linear-gradient(120deg,#164336,#112c37);border-color:rgba(86,214,160,.65);box-shadow:inset 0 0 0 1px rgba(86,214,160,.15),0 8px 24px rgba(50,170,126,.10)}
+.result-name{font-size:13px}
+.result-meta{font-size:10px}
+.production strong{font-size:22px;color:#f4fffd}
+.best-badge{font-size:8px;padding:6px 8px}
+.result-basis{background:rgba(255,255,255,.045);border-radius:10px;font-size:10px}
+.meter-track{height:6px;border-radius:99px;background:rgba(255,255,255,.1)}
+.meter-fill{background:linear-gradient(90deg,#69d9e8,#61dfa4)}
+.recommend{border-radius:19px;padding:17px;background:linear-gradient(130deg,#123e36,#122e40);border-color:rgba(86,214,160,.35)}
+.recommend h4{font-size:17px}
+.recommend p{font-size:11px}
+.foot{font-size:9px;line-height:1.65}
+.app-bottom-nav{position:fixed;z-index:20;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(620px,calc(100% - 22px));display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px;border:1px solid rgba(255,255,255,.13);border-radius:22px;background:rgba(12,25,42,.91);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 16px 45px rgba(0,0,0,.42)}
+.app-tab{border:0;background:transparent;color:#8fa3ba;border-radius:15px;min-height:55px;padding:6px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit;cursor:pointer;transition:background .18s,color .18s,transform .18s}
+.app-tab svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.app-tab span{font-size:9px;font-weight:750;letter-spacing:.1px;white-space:nowrap}
+.app-tab.active{color:#071b24;background:linear-gradient(135deg,#74e5d0,#8dcaff);box-shadow:0 5px 15px rgba(100,211,207,.17)}
+.app-tab:active{transform:scale(.95)}
+.modal{border-radius:23px;background:#12243a}
+.modal .input{font-size:16px}
+.telegram-mini-app .wrap{padding-top:max(8px,env(safe-area-inset-top,8px));padding-bottom:calc(34px + env(safe-area-inset-bottom,0px))}
+.telegram-mini-app .top{top:0}
+@media(min-width:850px){.wrap{max-width:900px;padding-left:20px;padding-right:20px}.top{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px}.hero{grid-template-columns:1.4fr .8fr}.grid{grid-template-columns:340px 1fr;align-items:start}.app-bottom-nav{bottom:14px}}
+@media(max-width:480px){.wrap{padding:8px 11px 28px}.top{margin:0 -11px 12px;padding:9px 11px 11px}.brand{gap:9px}.brand h1{font-size:14px}.eyebrow{font-size:8px}.logo{width:39px;height:39px;flex-basis:39px}.lang-select{min-width:104px;max-width:118px;min-height:38px!important;font-size:11px!important}.hero-main{padding:19px 17px 20px}.hero h2{font-size:25px}.hero-side{padding:13px 14px}.stat-number{font-size:20px}.card{padding:15px}.input{min-height:53px}.result{padding:12px;gap:8px}.production strong{font-size:19px}.app-bottom-nav{width:calc(100% - 18px);bottom:calc(7px + env(safe-area-inset-bottom,0px));padding:6px;border-radius:19px}.app-tab{min-height:51px;border-radius:13px}.app-tab svg{width:18px;height:18px}.app-tab span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="top">
+<header class="top" id="appTop">
   <div class="brand"><div class="logo">M</div><div><div class="eyebrow" data-t="brandEyebrow">PRODUCTION INTELLIGENCE</div><h1 data-t="appName">Machine Production Compare</h1></div></div>
   <div class="top-right"><div class="lang-wrap"><span data-t="languageLabel">Language</span><select class="lang-select" id="languageSelect" aria-label="Language"></select></div><div class="top-pill" data-t="livePill">● Live calculator · Mobile ready</div></div>
 </header>
@@ -39,14 +105,14 @@ body{padding-bottom:env(safe-area-inset-bottom,0px)}
   <div class="hero-side"><div><div class="stat-label" data-t="bestRecorded">Best recorded production</div><div class="stat-number" id="heroBest">—</div><div class="stat-foot" id="heroBestName">—</div></div><div><div class="stat-label" data-t="machinesLibrary">Machines in library</div><div class="stat-number" id="machineCount">10</div><div class="stat-foot" data-t="presetConfigs">Preset configurations</div></div></div>
 </section>
 <main class="grid">
-<section class="card">
+<section class="card input-panel" id="inputPanel">
   <div class="card-head"><div><h3 data-t="inputTitle">Production Input</h3></div><span class="tag" data-t="inputTag">INPUT</span></div>
   <div class="shared-note"><span class="shared-dot"></span><span data-t="sharedInputNote">Enter these two values once. Results for every machine update automatically.</span></div>
   <div class="field"><label for="dailyStitch"><span data-t="dailyStitch">Daily Stitch Production</span><span data-t="byKarigar">By operator · stitches/day</span></label><input class="input" id="dailyStitch" type="number" min="1" step="1" placeholder="Example: 400000" inputmode="numeric"></div>
   <div class="field"><label for="perFrame"><span data-t="perFrame">Stitches per Frame</span><span data-t="stitchesFrame">Stitches/frame</span></label><input class="input" id="perFrame" type="number" min="1" step="1" placeholder="Example: 50000" inputmode="numeric"></div>
   <div class="btn-row"><button class="btn btn-ghost" id="addBtn" data-t="addCustom">＋ Add Custom Machine</button><button class="btn btn-ghost" id="resetBtn" data-t="resetData">Reset Data</button></div>
 </section>
-<section class="card">
+<section class="card machine-panel" id="machinePanel">
   <div class="section-title"><div><h3 data-t="allProduction">Meter Production by Machine</h3><div class="sub" data-t="highestHint">Each result below uses the two stitch values you entered on the left.</div></div><span class="count" id="resultCount">0 calculated</span></div>
   <div class="results" id="results"></div>
   <div class="recommend" id="recommend"></div>
@@ -55,6 +121,22 @@ body{padding-bottom:env(safe-area-inset-bottom,0px)}
 </main>
 <div class="foot" data-t="catalogueNote">Machine configurations are indicative presets, not a complete manufacturer catalogue. Confirm the exact head count and working area with the machine supplier before purchase.</div>
 </div>
+
+<nav class="app-bottom-nav" aria-label="App navigation">
+  <button type="button" class="app-tab active" data-target="appTop" data-tab="home" aria-label="Home">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9M9 20v-7h6v7"/></svg><span data-t="navHome">Home</span>
+  </button>
+  <button type="button" class="app-tab" data-target="inputPanel" data-tab="input" aria-label="Input">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/><rect x="3" y="3" width="18" height="18" rx="5"/></svg><span data-t="navInput">Input</span>
+  </button>
+  <button type="button" class="app-tab" data-target="machinePanel" data-tab="machines" aria-label="Machines">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span data-t="navMachines">Machines</span>
+  </button>
+  <button type="button" class="app-tab" data-target="languageSelect" data-tab="language" aria-label="Language">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span data-t="navLanguage">Language</span>
+  </button>
+</nav>
+
 <div class="modal-backdrop" id="modal"><div class="modal">
   <h3 data-t="modalTitle">Add Custom Machine</h3><div class="sub" data-t="modalSub">Enter the head count and area (mm) of your machine.</div>
   <div class="field"><label for="customHead" data-t="machineHead">Machine Head</label><input class="input" id="customHead" type="number" min="1" placeholder="Example: 27"></div>
@@ -117,6 +199,10 @@ body{padding-bottom:env(safe-area-inset-bottom,0px)}
   translations.tr={brandEyebrow:'ÜRETİM BİLGİSİ',appName:'Makine Üretim Karşılaştırması',languageLabel:'Dil',livePill:'● Canlı hesaplayıcı · Mobil uyumlu',heroKicker:'AKILLI MAKİNE SEÇİCİ',heroTitle:'Hangi makine daha fazla kumaş üretir?',heroDesc:'Makineyi seçin, operatörün günlük dikiş üretimini ve çerçeve başına dikiş sayısını girin. Tüm makinelerin tahmini günlük kumaş üretimini tek yerde karşılaştırın.',bestRecorded:'Kaydedilen en yüksek üretim',machinesLibrary:'Listedeki makineler',presetConfigs:'Hazır makine ayarları',inputTitle:'Makine Bilgileri',inputSub:'Bir makine seçin ve üretim bilgilerini girin.',inputTag:'GİRİŞ',selectMachine:'Makine Seçin',dropdown:'Açılır liste',machineHead:'Makine Kafa Sayısı',areaMm:'Alan (mm)',dailyStitch:'Günlük Dikiş Üretimi',byKarigar:'Operatör tarafından · dikiş/gün',perFrame:'Çerçeve Başına Dikiş',stitchesFrame:'Dikiş/çerçeve',saveCalculate:'Makineyi Kaydet ve Hesapla ↗',addCustom:'＋ Özel Makine Ekle',resetData:'Verileri Sıfırla',inputHint:'Dikiş değerleri her makine için ayrı kaydedilir. Başka bir makine seçildiğinde kayıtlı değerleri görünür. Hesaplama formülleri gizlidir.',allProduction:'Tüm Makinelerin Üretimi',highestHint:'Günlük metre üretimi en yüksek makine ilk sırada görünür.',calculated:'hesaplandı',total:'toplam',dailyShort:'Günlük dikiş',perFrameShort:'Dikiş/çerçeve',dailyFrames:'Günlük çerçeve',frameMeter:'Çerçeve uzunluğu',meterDay:'METRE / GÜN',bestBadge:'★ EN İYİ MAKİNE',addStitch:'Dikiş verisi ekleyin',recommendKicker:'✦ AKILLI ÖNERİ',bestIs:'en iyisidir',bestText:'tahmini üretimi en yüksek makinedir:',moreThan:'sonraki makineden daha fazla',enterDataTitle:'Makinenin dikiş bilgilerini girin',enterDataText:'En az bir makine için günlük dikiş üretimini ve çerçeve başına dikiş sayısını girin. Karşılaştırmak için iki veya daha fazla makinenin verilerini ekleyin.',productionNote:'Gerçek üretim kumaşa, desene, operatöre, makinenin duruş süresine ve durumuna göre değişebilir. Bu hesaplayıcı girdiğiniz dikiş verilerini kullanır.',catalogueNote:'Makine yapılandırmaları örnek niteliğindedir ve eksiksiz üretici kataloğu değildir. Satın almadan önce kafa sayısını ve çalışma alanını tedarikçiden doğrulayın.',modalTitle:'Özel Makine Ekle',modalSub:'Makinenin kafa sayısını ve alanını (mm) girin.',cancel:'İptal',addMachine:'Makine Ekle',alertInputs:'Günlük dikiş üretimi ve çerçeve başına dikiş için sıfırdan büyük değer girin.',alertMachine:'Kafa sayısı ve alan için sıfırdan büyük değer girin.',confirmReset:'Kaydedilen tüm değişiklikler silinsin ve ilk makine listesi geri yüklensin mi?',exampleHead:'Örnek: 27',exampleArea:'Örnek: 400'};
   translations.vi={brandEyebrow:'THÔNG TIN SẢN XUẤT',appName:'So sánh năng suất máy',languageLabel:'Ngôn ngữ',livePill:'● Máy tính trực tiếp · Tương thích di động',heroKicker:'CHỌN MÁY THÔNG MINH',heroTitle:'Máy nào sản xuất được nhiều vải hơn?',heroDesc:'Chọn máy, nhập sản lượng mũi may mỗi ngày của công nhân và số mũi may trên mỗi khung. So sánh sản lượng vải ước tính mỗi ngày của tất cả máy tại một nơi.',bestRecorded:'Sản lượng cao nhất đã ghi nhận',machinesLibrary:'Máy trong danh sách',presetConfigs:'Cấu hình có sẵn',inputTitle:'Thông tin máy',inputSub:'Chọn một máy và nhập dữ liệu sản xuất.',inputTag:'NHẬP LIỆU',selectMachine:'Chọn máy',dropdown:'Danh sách thả xuống',machineHead:'Số đầu máy',areaMm:'Diện tích (mm)',dailyStitch:'Sản lượng mũi may mỗi ngày',byKarigar:'Do công nhân thực hiện · mũi/ngày',perFrame:'Số mũi trên mỗi khung',stitchesFrame:'Mũi/khung',saveCalculate:'Lưu máy và tính toán ↗',addCustom:'＋ Thêm máy tùy chỉnh',resetData:'Đặt lại dữ liệu',inputHint:'Dữ liệu mũi may được lưu riêng cho từng máy. Khi chọn máy khác, dữ liệu đã lưu của máy đó sẽ hiển thị. Công thức tính được ẩn.',allProduction:'Sản lượng của tất cả máy',highestHint:'Máy có sản lượng mét mỗi ngày cao nhất sẽ hiển thị đầu tiên.',calculated:'đã tính',total:'tổng',dailyShort:'Mũi may mỗi ngày',perFrameShort:'Mũi/khung',dailyFrames:'Số khung mỗi ngày',frameMeter:'Chiều dài khung',meterDay:'MÉT / NGÀY',bestBadge:'★ MÁY TỐT NHẤT',addStitch:'Thêm dữ liệu mũi may',recommendKicker:'✦ ĐỀ XUẤT THÔNG MINH',bestIs:'là tốt nhất',bestText:'có sản lượng ước tính cao nhất:',moreThan:'nhiều hơn máy tiếp theo',enterDataTitle:'Nhập dữ liệu mũi may của máy',enterDataText:'Nhập sản lượng mũi may mỗi ngày và số mũi trên mỗi khung cho ít nhất một máy. Thêm dữ liệu của hai máy trở lên để so sánh.',productionNote:'Sản lượng thực tế có thể thay đổi theo loại vải, thiết kế, công nhân, thời gian máy dừng và tình trạng máy. Công cụ này tính toán dựa trên dữ liệu mũi may bạn nhập.',catalogueNote:'Các cấu hình máy chỉ mang tính tham khảo, không phải danh mục đầy đủ của nhà sản xuất. Hãy xác nhận số đầu máy và vùng làm việc với nhà cung cấp trước khi mua.',modalTitle:'Thêm máy tùy chỉnh',modalSub:'Nhập số đầu máy và diện tích (mm).',cancel:'Hủy',addMachine:'Thêm máy',alertInputs:'Vui lòng nhập giá trị lớn hơn 0 cho sản lượng mũi may mỗi ngày và số mũi trên mỗi khung.',alertMachine:'Vui lòng nhập giá trị lớn hơn 0 cho số đầu máy và diện tích.',confirmReset:'Xóa mọi thay đổi đã lưu và khôi phục danh sách máy ban đầu?',exampleHead:'Ví dụ: 27',exampleArea:'Ví dụ: 400'};
   translations.th={brandEyebrow:'ข้อมูลการผลิต',appName:'เปรียบเทียบกำลังการผลิตเครื่องจักร',languageLabel:'ภาษา',livePill:'● เครื่องคำนวณสด · รองรับมือถือ',heroKicker:'ตัวเลือกเครื่องจักรอัจฉริยะ',heroTitle:'เครื่องใดผลิตผ้าได้มากกว่า?',heroDesc:'เลือกเครื่องจักร ป้อนจำนวนฝีเข็มที่ช่างทำได้ต่อวันและจำนวนฝีเข็มต่อเฟรม แล้วเปรียบเทียบปริมาณผ้าที่คาดว่าจะผลิตได้ต่อวันของทุกเครื่องในที่เดียว',bestRecorded:'ผลผลิตสูงสุดที่บันทึกไว้',machinesLibrary:'เครื่องจักรในรายการ',presetConfigs:'การตั้งค่าที่เตรียมไว้',inputTitle:'ข้อมูลเครื่องจักร',inputSub:'เลือกเครื่องจักรหนึ่งเครื่องและป้อนรายละเอียดการผลิต',inputTag:'ข้อมูลเข้า',selectMachine:'เลือกเครื่องจักร',dropdown:'เมนูแบบเลื่อนลง',machineHead:'จำนวนหัวเครื่อง',areaMm:'พื้นที่ (mm)',dailyStitch:'จำนวนฝีเข็มที่ผลิตต่อวัน',byKarigar:'โดยช่าง · ฝีเข็ม/วัน',perFrame:'จำนวนฝีเข็มต่อเฟรม',stitchesFrame:'ฝีเข็ม/เฟรม',saveCalculate:'บันทึกเครื่องและคำนวณ ↗',addCustom:'＋ เพิ่มเครื่องจักรแบบกำหนดเอง',resetData:'รีเซ็ตข้อมูล',inputHint:'ค่าฝีเข็มจะถูกบันทึกแยกสำหรับแต่ละเครื่อง เมื่อเลือกเครื่องอื่นจะแสดงค่าที่บันทึกไว้ สูตรการคำนวณจะถูกซ่อนไว้',allProduction:'ผลผลิตของเครื่องจักรทั้งหมด',highestHint:'เครื่องที่ผลิตได้มากที่สุดเป็นเมตรต่อวันจะแสดงอยู่ด้านบน',calculated:'คำนวณแล้ว',total:'ทั้งหมด',dailyShort:'ฝีเข็มต่อวัน',perFrameShort:'ฝีเข็ม/เฟรม',dailyFrames:'จำนวนเฟรมต่อวัน',frameMeter:'ความยาวเฟรม',meterDay:'เมตร / วัน',bestBadge:'★ เครื่องจักรที่ดีที่สุด',addStitch:'เพิ่มข้อมูลฝีเข็ม',recommendKicker:'✦ คำแนะนำอัจฉริยะ',bestIs:'ดีที่สุด',bestText:'มีผลผลิตโดยประมาณสูงที่สุด:',moreThan:'มากกว่าเครื่องถัดไป',enterDataTitle:'ป้อนข้อมูลฝีเข็มของเครื่องจักร',enterDataText:'ป้อนจำนวนฝีเข็มต่อวันและจำนวนฝีเข็มต่อเฟรมสำหรับอย่างน้อยหนึ่งเครื่อง เพิ่มข้อมูลของสองเครื่องขึ้นไปเพื่อเปรียบเทียบ',productionNote:'ผลผลิตจริงอาจแตกต่างตามชนิดผ้า ลวดลาย ช่างผู้ปฏิบัติงาน เวลาหยุดเครื่อง และสภาพเครื่อง เครื่องคำนวณนี้ใช้ข้อมูลฝีเข็มที่คุณป้อน',catalogueNote:'การกำหนดค่าเครื่องจักรเป็นตัวอย่างประกอบ ไม่ใช่แคตตาล็อกผู้ผลิตฉบับสมบูรณ์ โปรดยืนยันจำนวนหัวและพื้นที่ทำงานกับผู้ขายก่อนซื้อ',modalTitle:'เพิ่มเครื่องจักรแบบกำหนดเอง',modalSub:'ป้อนจำนวนหัวและพื้นที่ (mm) ของเครื่องจักร',cancel:'ยกเลิก',addMachine:'เพิ่มเครื่องจักร',alertInputs:'โปรดป้อนค่ามากกว่าศูนย์สำหรับจำนวนฝีเข็มต่อวันและจำนวนฝีเข็มต่อเฟรม',alertMachine:'โปรดป้อนค่ามากกว่าศูนย์สำหรับจำนวนหัวและพื้นที่',confirmReset:'ต้องการลบการเปลี่ยนแปลงที่บันทึกไว้ทั้งหมดและคืนค่ารายการเครื่องจักรเดิมหรือไม่?',exampleHead:'ตัวอย่าง: 27',exampleArea:'ตัวอย่าง: 400'};
+
+
+  const appNavLabels = {"en":["Home","Input","Machines","Language"],"gu":["હોમ","ઇનપુટ","મશીનો","ભાષા"],"hi":["होम","इनपुट","मशीनें","भाषा"],"mr":["मुख्य","इनपुट","मशीन","भाषा"],"bn":["হোম","ইনপুট","মেশিন","ভাষা"],"ta":["முகப்பு","உள்ளீடு","இயந்திரங்கள்","மொழி"],"te":["హోమ్","ఇన్‌పుట్","యంత్రాలు","భాష"],"kn":["ಮನೆ","ಇನ್‌ಪುಟ್","ಯಂತ್ರಗಳು","ಭಾಷೆ"],"ml":["ഹോം","ഇൻപുട്ട്","മെഷീനുകൾ","ഭാഷ"],"pa":["ਮੁੱਖ","ਇਨਪੁੱਟ","ਮਸ਼ੀਨਾਂ","ਭਾਸ਼ਾ"],"ur":["ہوم","ان پٹ","مشینیں","زبان"],"ar":["الرئيسية","إدخال","الآلات","اللغة"],"es":["Inicio","Datos","Máquinas","Idioma"],"fr":["Accueil","Saisie","Machines","Langue"],"de":["Start","Eingabe","Maschinen","Sprache"],"pt":["Início","Dados","Máquinas","Idioma"],"ru":["Главная","Ввод","Машины","Язык"],"zh":["首页","输入","机器","语言"],"ja":["ホーム","入力","機械","言語"],"ko":["홈","입력","기계","언어"],"id":["Beranda","Input","Mesin","Bahasa"],"it":["Home","Dati","Macchine","Lingua"],"tr":["Ana Sayfa","Giriş","Makineler","Dil"],"vi":["Trang chủ","Nhập","Máy","Ngôn ngữ"],"th":["หน้าแรก","ข้อมูล","เครื่องจักร","ภาษา"]};
+  Object.entries(appNavLabels).forEach(([code,labels])=>{if(translations[code])Object.assign(translations[code],{navHome:labels[0],navInput:labels[1],navMachines:labels[2],navLanguage:labels[3]});});
 
   const sharedUiText={
     en:{sharedInputNote:'Enter these two values once. Results for every machine update automatically.',enterDataText:'Enter Daily Stitch Production and Stitches per Frame above. Every machine will be calculated and compared automatically.'},
@@ -313,6 +399,32 @@ body{padding-bottom:env(safe-area-inset-bottom,0px)}
   $('addBtn').addEventListener('click',()=>{$('modal').classList.add('show');$('customHead').focus();});$('cancelModal').addEventListener('click',()=>$('modal').classList.remove('show'));$('modal').addEventListener('click',e=>{if(e.target===$('modal'))$('modal').classList.remove('show');});
   $('saveCustom').addEventListener('click',()=>{const h=Number($('customHead').value),a=Number($('customArea').value);if(!(h>0&&a>0)){alert(t('alertMachine'));return;}const id='custom-'+Date.now();machines.push({id,head:h,area:a,source:'Custom'});persist();renderResults();$('customHead').value='';$('customArea').value='';$('modal').classList.remove('show');});
   $('resetBtn').addEventListener('click',()=>{if(!confirm(t('confirmReset')))return;machines=defaults.map(x=>({...x}));sharedInputs={daily:'',per:''};persist();persistInputs();renderResults();});
+
+  // App-style bottom navigation for mobile and Telegram Mini Apps.
+  document.querySelectorAll('.app-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+      tab.classList.add('active');
+      try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light');}catch(_){}
+      const target=$(tab.dataset.target);
+      if(tab.dataset.tab==='language'){
+        $('languageSelect').scrollIntoView({behavior:'smooth',block:'center'});
+        try{$('languageSelect').focus({preventScroll:true});}catch(_){$('languageSelect').focus();}
+      }else if(target){target.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+  // Keep the active tab in sync when the user scrolls manually.
+  if('IntersectionObserver' in window){
+    const navTargets=[['appTop','home'],['inputPanel','input'],['machinePanel','machines']];
+    const observer=new IntersectionObserver(entries=>{
+      const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(!visible)return;
+      const found=navTargets.find(x=>x[0]===visible.target.id);
+      if(found){document.querySelectorAll('.app-tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===found[1]));}
+    },{rootMargin:'-22% 0px -60% 0px',threshold:[0,.15,.35]});
+    navTargets.forEach(([id])=>{const el=$(id);if(el)observer.observe(el);});
+  }
+
   applyLanguage();
 })();
 </script>
